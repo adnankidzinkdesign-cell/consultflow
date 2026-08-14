@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -61,6 +62,7 @@ export function DevAuthForm() {
             className="flex-1"
             disabled={pending}
           >
+            {pending && <Loader2 className="h-4 w-4 animate-spin" />}
             Sign up
           </Button>
           <Button
@@ -72,6 +74,7 @@ export function DevAuthForm() {
             className="flex-1"
             disabled={pending}
           >
+            {pending && <Loader2 className="h-4 w-4 animate-spin" />}
             Sign in
           </Button>
         </div>

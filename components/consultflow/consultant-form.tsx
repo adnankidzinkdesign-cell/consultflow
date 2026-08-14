@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -201,6 +202,7 @@ export function ConsultantForm({
       </div>
 
       <Button type="submit" disabled={pending}>
+        {pending && <Loader2 className="h-4 w-4 animate-spin" />}
         {pending ? "Saving…" : submitLabel}
       </Button>
     </form>
