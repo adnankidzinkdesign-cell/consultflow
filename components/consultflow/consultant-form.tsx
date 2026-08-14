@@ -35,9 +35,20 @@ const TIER_OPTIONS: { value: ConsultantTier; label: string }[] = [
   { value: "tier_3", label: "Tier 3" },
 ];
 
+// Base UI's Select.Value shows the raw value by default — unlike Radix, it
+// doesn't automatically display the matched SelectItem's label — so the
+// trigger needs an explicit value -> label mapping via `children`.
+const STATUS_LABELS = Object.fromEntries(
+  STATUS_OPTIONS.map((opt) => [opt.value, opt.label])
+) as Record<ConsultantStatus, string>;
+const TIER_LABELS = Object.fromEntries(
+  TIER_OPTIONS.map((opt) => [opt.value, opt.label])
+) as Record<ConsultantTier, string>;
+
 export function ConsultantForm({
   action,
   consultant,
+  projectNames,
   submitLabel,
 }: {
   action: (
@@ -45,6 +56,10 @@ export function ConsultantForm({
     formData: FormData
   ) => Promise<ConsultantFormState>;
   consultant?: Consultant;
+  /** Current project assignments, when editing — fetched separately since
+   * they live in the consultant_projects join table, not on the consultant
+   * row itself. */
+  projectNames?: string[];
   submitLabel: string;
 }) {
   const [state, formAction, pending] = useActionState(action, { error: null });
@@ -80,29 +95,6 @@ export function ConsultantForm({
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="discipline">Discipline *</Label>
-          <Input
-            id="discipline"
-            name="discipline"
-            required
-            placeholder="e.g. Structural Engineering"
-            defaultValue={consultant?.discipline}
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-1.5">
-          <Label htmlFor="contact_email">Contact email *</Label>
-          <Input
-            id="contact_email"
-            name="contact_email"
-            type="email"
-            required
-            defaultValue={consultant?.contact_email}
-          />
-        </div>
-        <div className="space-y-1.5">
           <Label htmlFor="contact_phone">Contact phone</Label>
           <Input
             id="contact_phone"
@@ -110,6 +102,45 @@ export function ConsultantForm({
             defaultValue={consultant?.contact_phone ?? undefined}
           />
         </div>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="contact_email">Contact email</Label>
+        <Input
+          id="contact_email"
+          name="contact_email"
+          type="email"
+          defaultValue={consultant?.contact_email ?? undefined}
+        />
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="disciplines">Disciplines *</Label>
+        <Input
+          id="disciplines"
+          name="disciplines"
+          required
+          placeholder="Comma-separated, e.g. Structural Engineering, MEP"
+          defaultValue={consultant?.disciplines.join(", ")}
+        />
+        <p className="text-xs text-muted-foreground">
+          One consultant can offer multiple disciplines/services — list them all here
+          instead of adding the company more than once.
+        </p>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="projects">Projects</Label>
+        <Input
+          id="projects"
+          name="projects"
+          placeholder="Comma-separated, e.g. RGS, HORIZON, DULWICH"
+          defaultValue={projectNames?.join(", ")}
+        />
+        <p className="text-xs text-muted-foreground">
+          Which projects this consultant is/was engaged on. New project names are
+          created automatically; existing ones (matched regardless of case) are reused.
+        </p>
       </div>
 
       <div className="space-y-1.5">
@@ -128,7 +159,9 @@ export function ConsultantForm({
             <Label htmlFor="status">Status</Label>
             <Select name="status" defaultValue={consultant.status}>
               <SelectTrigger id="status" className="w-full">
-                <SelectValue />
+                <SelectValue>
+                  {(value: ConsultantStatus) => STATUS_LABELS[value]}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {STATUS_OPTIONS.map((opt) => (
@@ -143,7 +176,7 @@ export function ConsultantForm({
             <Label htmlFor="tier">Tier</Label>
             <Select name="tier" defaultValue={consultant.tier}>
               <SelectTrigger id="tier" className="w-full">
-                <SelectValue />
+                <SelectValue>{(value: ConsultantTier) => TIER_LABELS[value]}</SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {TIER_OPTIONS.map((opt) => (

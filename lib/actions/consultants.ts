@@ -13,12 +13,59 @@ export interface ConsultantFormState {
   error: string | null;
 }
 
-function parseRegions(raw: FormDataEntryValue | null): string[] {
+// Shared by `regions` and `disciplines` — both are comma-separated text
+// inputs backed by a text[] column, e.g. "Structural Engineering, MEP".
+function parseCommaSeparated(raw: FormDataEntryValue | null): string[] {
   if (!raw || typeof raw !== "string") return [];
   return raw
     .split(",")
     .map((r) => r.trim())
     .filter(Boolean);
+}
+
+/**
+ * Replaces a consultant's project assignments with `projectNames`,
+ * looking up each by case-insensitive name (so "RGS" and "rgs" resolve to
+ * the same project instead of drifting into near-duplicates) and creating
+ * a `projects` row for any name not seen before. Always fully replaces the
+ * set rather than diffing — same approach as the disciplines/regions
+ * arrays, just backed by a real join table instead of a text[] column.
+ */
+async function syncConsultantProjects(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  consultantId: string,
+  projectNames: string[]
+) {
+  await supabase.from("consultant_projects").delete().eq("consultant_id", consultantId);
+  if (projectNames.length === 0) return;
+
+  const { data: existingProjects } = await supabase.from("projects").select("id, name");
+  const idByLowerName = new Map(
+    (existingProjects ?? []).map((p) => [p.name.toLowerCase(), p.id])
+  );
+
+  const projectIds = new Set<string>();
+  for (const name of projectNames) {
+    const key = name.toLowerCase();
+    let id = idByLowerName.get(key);
+    if (!id) {
+      const { data: created, error } = await supabase
+        .from("projects")
+        .insert({ name })
+        .select("id")
+        .single();
+      if (error || !created) continue; // best-effort; don't block saving the consultant over one bad project name
+      id = created.id;
+      idByLowerName.set(key, id);
+    }
+    projectIds.add(id);
+  }
+
+  if (projectIds.size > 0) {
+    await supabase.from("consultant_projects").insert(
+      Array.from(projectIds, (project_id) => ({ consultant_id: consultantId, project_id }))
+    );
+  }
 }
 
 /**
@@ -40,11 +87,10 @@ export async function createConsultant(
   }
 
   const companyName = (formData.get("company_name") as string)?.trim();
-  const discipline = (formData.get("discipline") as string)?.trim();
-  const contactEmail = (formData.get("contact_email") as string)?.trim();
+  const disciplines = parseCommaSeparated(formData.get("disciplines"));
 
-  if (!companyName || !discipline || !contactEmail) {
-    return { error: "Company name, discipline, and contact email are required." };
+  if (!companyName || disciplines.length === 0) {
+    return { error: "Company name and at least one discipline are required." };
   }
 
   const supabase = await createClient();
@@ -54,10 +100,10 @@ export async function createConsultant(
     .insert({
       company_name: companyName,
       contact_name: (formData.get("contact_name") as string)?.trim() || null,
-      discipline,
-      contact_email: contactEmail,
+      disciplines,
+      contact_email: (formData.get("contact_email") as string)?.trim() || null,
       contact_phone: (formData.get("contact_phone") as string)?.trim() || null,
-      regions: parseRegions(formData.get("regions")),
+      regions: parseCommaSeparated(formData.get("regions")),
       notes: (formData.get("notes") as string)?.trim() || null,
       created_by: profile.userId,
     })
@@ -67,6 +113,8 @@ export async function createConsultant(
   if (error || !consultant) {
     return { error: error?.message ?? "Failed to create consultant." };
   }
+
+  await syncConsultantProjects(supabase, consultant.id, parseCommaSeparated(formData.get("projects")));
 
   const { data: checklistDefs } = await supabase
     .from("checklist_item_defs")
@@ -97,11 +145,10 @@ export async function updateConsultant(
   }
 
   const companyName = (formData.get("company_name") as string)?.trim();
-  const discipline = (formData.get("discipline") as string)?.trim();
-  const contactEmail = (formData.get("contact_email") as string)?.trim();
+  const disciplines = parseCommaSeparated(formData.get("disciplines"));
 
-  if (!companyName || !discipline || !contactEmail) {
-    return { error: "Company name, discipline, and contact email are required." };
+  if (!companyName || disciplines.length === 0) {
+    return { error: "Company name and at least one discipline are required." };
   }
 
   const supabase = await createClient();
@@ -111,10 +158,10 @@ export async function updateConsultant(
     .update({
       company_name: companyName,
       contact_name: (formData.get("contact_name") as string)?.trim() || null,
-      discipline,
-      contact_email: contactEmail,
+      disciplines,
+      contact_email: (formData.get("contact_email") as string)?.trim() || null,
       contact_phone: (formData.get("contact_phone") as string)?.trim() || null,
-      regions: parseRegions(formData.get("regions")),
+      regions: parseCommaSeparated(formData.get("regions")),
       status: formData.get("status") as ConsultantStatus,
       tier: formData.get("tier") as ConsultantTier,
       notes: (formData.get("notes") as string)?.trim() || null,
@@ -124,6 +171,8 @@ export async function updateConsultant(
   if (error) {
     return { error: error.message };
   }
+
+  await syncConsultantProjects(supabase, consultantId, parseCommaSeparated(formData.get("projects")));
 
   revalidatePath("/consultants");
   revalidatePath(`/consultants/${consultantId}`);

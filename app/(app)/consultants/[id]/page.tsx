@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeftIcon } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getSessionProfile } from "@/lib/auth/getSessionProfile";
+import { getConsultantProjectNames } from "@/lib/queries/consultant-projects";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ConsultantStatusBadge, TierBadge } from "@/components/consultflow/status-badges";
@@ -27,6 +29,8 @@ export default async function ConsultantDetailPage({
     .single();
 
   if (!consultant) notFound();
+
+  const projectNames = await getConsultantProjectNames(supabase, id);
 
   const { data: reviews } = await supabase
     .from("feedback_reviews")
@@ -56,6 +60,14 @@ export default async function ConsultantDetailPage({
 
   return (
     <div className="space-y-8">
+      <Link
+        href="/consultants"
+        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+      >
+        <ArrowLeftIcon className="size-4" />
+        Back to consultants
+      </Link>
+
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
@@ -68,8 +80,14 @@ export default async function ConsultantDetailPage({
           </div>
           <dl className="grid grid-cols-2 gap-x-8 gap-y-1 text-sm text-muted-foreground sm:grid-cols-3">
             <div>
-              <dt className="text-xs uppercase tracking-wide">Discipline</dt>
-              <dd className="text-foreground">{consultant.discipline}</dd>
+              <dt className="text-xs uppercase tracking-wide">Disciplines</dt>
+              <dd className="text-foreground">{consultant.disciplines.join(", ")}</dd>
+            </div>
+            <div>
+              <dt className="text-xs uppercase tracking-wide">Projects</dt>
+              <dd className="text-foreground">
+                {projectNames.length > 0 ? projectNames.join(", ") : "—"}
+              </dd>
             </div>
             <div>
               <dt className="text-xs uppercase tracking-wide">Regions</dt>
@@ -80,8 +98,15 @@ export default async function ConsultantDetailPage({
             <div>
               <dt className="text-xs uppercase tracking-wide">Contact</dt>
               <dd className="text-foreground">
-                {consultant.contact_name && <>{consultant.contact_name} · </>}
-                {consultant.contact_email}
+                {consultant.contact_name || consultant.contact_email ? (
+                  <>
+                    {consultant.contact_name}
+                    {consultant.contact_name && consultant.contact_email && " · "}
+                    {consultant.contact_email}
+                  </>
+                ) : (
+                  "—"
+                )}
               </dd>
             </div>
           </dl>
@@ -93,10 +118,15 @@ export default async function ConsultantDetailPage({
         <div className="flex gap-2">
           <Button
             variant="outline"
+            nativeButton={false}
             render={<Link href={`/consultants/${id}/reviews/new`}>Leave a review</Link>}
           />
           {profile?.role === "admin" && (
-            <Button variant="secondary" render={<Link href={`/consultants/${id}/edit`}>Edit</Link>} />
+            <Button
+              variant="secondary"
+              nativeButton={false}
+              render={<Link href={`/consultants/${id}/edit`}>Edit</Link>}
+            />
           )}
         </div>
       </div>

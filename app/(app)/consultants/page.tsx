@@ -27,7 +27,7 @@ export default async function ConsultantsPage({
     query = query.or(`company_name.ilike.%${q}%,contact_name.ilike.%${q}%`);
   }
   if (discipline && discipline !== "all") {
-    query = query.eq("discipline", discipline);
+    query = query.contains("disciplines", [discipline]);
   }
   if (region) {
     query = query.contains("regions", [region]);
@@ -39,13 +39,18 @@ export default async function ConsultantsPage({
     );
   }
 
-  const [{ data: consultants }, { data: disciplineRows }] = await Promise.all([
-    query,
-    supabase.from("consultants").select("discipline"),
-  ]);
+  const [{ data: consultants }, { data: disciplineRows }, { data: regionRows }] =
+    await Promise.all([
+      query,
+      supabase.from("consultants").select("disciplines"),
+      supabase.from("consultants").select("regions"),
+    ]);
 
   const disciplines = Array.from(
-    new Set((disciplineRows ?? []).map((r) => r.discipline))
+    new Set((disciplineRows ?? []).flatMap((r) => r.disciplines))
+  ).sort();
+  const regions = Array.from(
+    new Set((regionRows ?? []).flatMap((r) => r.regions))
   ).sort();
 
   return (
@@ -58,7 +63,7 @@ export default async function ConsultantsPage({
           </p>
         </div>
         {profile?.role === "admin" && (
-          <Button render={<Link href="/consultants/new">Add consultant</Link>} />
+          <Button nativeButton={false} render={<Link href="/consultants/new">Add consultant</Link>} />
         )}
       </div>
 
@@ -68,9 +73,13 @@ export default async function ConsultantsPage({
         region={region}
         status={status}
         disciplines={disciplines}
+        regions={regions}
       />
 
-      <ConsultantTable consultants={consultants ?? []} />
+      <ConsultantTable
+        consultants={consultants ?? []}
+        activeDiscipline={discipline && discipline !== "all" ? discipline : undefined}
+      />
     </div>
   );
 }

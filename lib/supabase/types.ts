@@ -59,8 +59,8 @@ export interface Database {
           id: string;
           company_name: string;
           contact_name: string | null;
-          discipline: string;
-          contact_email: string;
+          disciplines: string[];
+          contact_email: string | null;
           contact_phone: string | null;
           regions: string[];
           status: ConsultantStatus;
@@ -72,8 +72,7 @@ export interface Database {
         };
         Insert: Partial<Database["public"]["Tables"]["consultants"]["Row"]> & {
           company_name: string;
-          discipline: string;
-          contact_email: string;
+          disciplines: string[];
         };
         Update: Partial<Database["public"]["Tables"]["consultants"]["Row"]>;
         Relationships: [];
@@ -149,6 +148,32 @@ export interface Database {
           commercial_value: number;
         };
         Update: Partial<Database["public"]["Tables"]["feedback_reviews"]["Row"]>;
+        Relationships: [];
+      };
+      projects: {
+        Row: {
+          id: string;
+          name: string;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["projects"]["Row"]> & {
+          name: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["projects"]["Row"]>;
+        Relationships: [];
+      };
+      consultant_projects: {
+        Row: {
+          consultant_id: string;
+          project_id: string;
+          created_at: string;
+        };
+        Insert: Partial<
+          Database["public"]["Tables"]["consultant_projects"]["Row"]
+        > & { consultant_id: string; project_id: string };
+        Update: Partial<
+          Database["public"]["Tables"]["consultant_projects"]["Row"]
+        >;
         Relationships: [];
       };
     };
