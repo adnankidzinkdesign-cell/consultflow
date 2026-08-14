@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getSessionProfile } from "@/lib/auth/getSessionProfile";
 import { AppHeader } from "@/components/consultflow/app-header";
+import { ModalSlot } from "@/components/consultflow/modal-slot";
 import { Toaster } from "@/components/ui/sonner";
 
 /**
@@ -15,8 +16,10 @@ import { Toaster } from "@/components/ui/sonner";
  */
 export default async function AppLayout({
   children,
+  modal,
 }: {
   children: React.ReactNode;
+  modal: React.ReactNode;
 }) {
   const profile = await getSessionProfile();
 
@@ -30,6 +33,7 @@ export default async function AppLayout({
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6">
         {children}
       </main>
+      <ModalSlot>{modal}</ModalSlot>
       <Toaster />
     </div>
   );
