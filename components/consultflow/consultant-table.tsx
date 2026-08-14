@@ -12,7 +12,32 @@ import type { Database } from "@/lib/supabase/types";
 
 type Consultant = Database["public"]["Tables"]["consultants"]["Row"];
 
-export function ConsultantTable({ consultants }: { consultants: Consultant[] }) {
+const DISCIPLINE_CHAR_LIMIT = 30;
+
+/**
+ * Keeps the Disciplines column from forcing horizontal scroll: more than
+ * one discipline collapses to a fixed label (the full list is one click
+ * away on the detail page, or visible via the `title` tooltip), and a
+ * single long discipline name gets truncated with an ellipsis instead of
+ * stretching the column.
+ */
+function formatDisciplines(disciplines: string[]): string {
+  if (disciplines.length === 0) return "—";
+  if (disciplines.length > 1) return "Multiple disciplines";
+  const [only] = disciplines;
+  return only.length > DISCIPLINE_CHAR_LIMIT
+    ? `${only.slice(0, DISCIPLINE_CHAR_LIMIT).trimEnd()}…`
+    : only;
+}
+
+export function ConsultantTable({
+  consultants,
+  activeDiscipline,
+}: {
+  consultants: Consultant[];
+  /** The currently selected discipline filter, if any ("all" shows every discipline). */
+  activeDiscipline?: string;
+}) {
   if (consultants.length === 0) {
     return (
       <p className="rounded-lg border border-dashed border-border py-12 text-center text-sm text-muted-foreground">
@@ -27,7 +52,7 @@ export function ConsultantTable({ consultants }: { consultants: Consultant[] }) 
         <TableHeader>
           <TableRow>
             <TableHead>Company</TableHead>
-            <TableHead>Discipline</TableHead>
+            <TableHead>Disciplines</TableHead>
             <TableHead>Regions</TableHead>
             <TableHead>Tier</TableHead>
             <TableHead>Status</TableHead>
@@ -47,8 +72,14 @@ export function ConsultantTable({ consultants }: { consultants: Consultant[] }) 
                 </Link>
               </TableCell>
               <TableCell>
-                <Link href={`/consultants/${c.id}`} className="block">
-                  {c.discipline}
+                <Link
+                  href={`/consultants/${c.id}`}
+                  className="block"
+                  title={c.disciplines.join(", ")}
+                >
+                  {activeDiscipline
+                    ? formatDisciplines([activeDiscipline])
+                    : formatDisciplines(c.disciplines)}
                 </Link>
               </TableCell>
               <TableCell>
