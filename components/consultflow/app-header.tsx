@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { signOut } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/consultflow/theme-toggle";
 import type { SessionProfile } from "@/lib/auth/getSessionProfile";
 
 const ROLE_LABELS: Record<SessionProfile["role"], string> = {
@@ -38,6 +39,7 @@ export function AppHeader({ profile }: { profile: SessionProfile }) {
               Sign out
             </Button>
           </form>
+          <ThemeToggle />
         </div>
       </div>
     </header>

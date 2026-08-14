@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { signInWithAzure } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
+import { DevAuthForm } from "@/components/consultflow/dev-auth-form";
+import { ThemeToggle } from "@/components/consultflow/theme-toggle";
 
 const ERROR_MESSAGES: Record<string, string> = {
   domain:
@@ -20,6 +22,9 @@ export default async function LoginPage({
 
   return (
     <div className="flex min-h-screen flex-1 flex-col items-center justify-center bg-background px-4">
+      <div className="fixed right-4 top-4">
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-sm space-y-8 rounded-xl border border-border bg-card p-8 shadow-sm">
         <div className="flex flex-col items-center gap-4 text-center">
           <Image
@@ -57,6 +62,8 @@ export default async function LoginPage({
         <p className="text-center text-xs text-muted-foreground">
           Use your KidzInk Microsoft 365 work account.
         </p>
+
+        {process.env.NODE_ENV !== "production" && <DevAuthForm />}
       </div>
     </div>
   );
