@@ -6,19 +6,35 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import {
+  Combobox,
+  ComboboxChips,
+  ComboboxChip,
+  ComboboxChipsInput,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxValue,
+  useComboboxAnchor,
+} from "@/components/ui/combobox";
 import { StarRatingField } from "@/components/consultflow/star-rating-field";
 import { FEEDBACK_CATEGORIES } from "@/lib/supabase/types";
 import type { FeedbackFormState } from "@/lib/actions/feedback";
 
 export function FeedbackReviewForm({
   action,
+  disciplineOptions,
 }: {
   action: (
     state: FeedbackFormState,
     formData: FormData
   ) => Promise<FeedbackFormState>;
+  /** The consultant's own disciplines — the review can only cover a subset of these. */
+  disciplineOptions: string[];
 }) {
   const [state, formAction, pending] = useActionState(action, { error: null });
+  const chipsAnchor = useComboboxAnchor();
 
   return (
     <form action={formAction} className="max-w-xl space-y-6">
@@ -34,6 +50,35 @@ export function FeedbackReviewForm({
       <div className="space-y-1.5">
         <Label htmlFor="project_name">Project</Label>
         <Input id="project_name" name="project_name" placeholder="Project name" />
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="disciplines">Discipline(s) covered by this review</Label>
+        <Combobox items={disciplineOptions} name="disciplines" multiple autoHighlight>
+          <ComboboxChips ref={chipsAnchor}>
+            <ComboboxValue>
+              {(selected: string[]) =>
+                selected.map((item) => (
+                  <ComboboxChip key={item}>{item}</ComboboxChip>
+                ))
+              }
+            </ComboboxValue>
+            <ComboboxChipsInput
+              id="disciplines"
+              placeholder={disciplineOptions.length ? "Select discipline(s)" : "No disciplines on file"}
+            />
+          </ComboboxChips>
+          <ComboboxContent anchor={chipsAnchor}>
+            <ComboboxEmpty>No matches</ComboboxEmpty>
+            <ComboboxList>
+              {(item: string) => (
+                <ComboboxItem key={item} value={item}>
+                  {item}
+                </ComboboxItem>
+              )}
+            </ComboboxList>
+          </ComboboxContent>
+        </Combobox>
       </div>
 
       <div className="space-y-5 rounded-lg border border-border bg-card p-4">

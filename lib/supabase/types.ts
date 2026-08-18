@@ -132,6 +132,7 @@ export interface Database {
           communication: number;
           commercial_value: number;
           blacklist: boolean;
+          disciplines: string[];
           comments: string | null;
           created_at: string;
           updated_at: string;
@@ -141,6 +142,7 @@ export interface Database {
         > & {
           consultant_id: string;
           reviewer_id: string;
+          disciplines: string[];
           technical_competence: number;
           quality_of_deliverables: number;
           programme_reliability: number;

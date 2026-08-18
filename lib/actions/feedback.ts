@@ -25,6 +25,11 @@ export async function createFeedbackReview(
     return { error: "You must be signed in to leave a review." };
   }
 
+  const disciplines = formData.getAll("disciplines").map((v) => String(v).trim()).filter(Boolean);
+  if (disciplines.length === 0) {
+    return { error: "Select at least one discipline this review covers." };
+  }
+
   const ratings: Record<string, number> = {};
   for (const { key, label } of FEEDBACK_CATEGORIES) {
     const raw = formData.get(key);
@@ -40,6 +45,7 @@ export async function createFeedbackReview(
     consultant_id: consultantId,
     reviewer_id: profile.userId,
     project_name: (formData.get("project_name") as string)?.trim() || null,
+    disciplines,
     technical_competence: ratings.technical_competence,
     quality_of_deliverables: ratings.quality_of_deliverables,
     programme_reliability: ratings.programme_reliability,

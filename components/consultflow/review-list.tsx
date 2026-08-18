@@ -35,6 +35,15 @@ export function ReviewList({
                 {reviewerNames[review.reviewer_id] ?? "Unknown reviewer"} ·{" "}
                 {new Date(review.created_at).toLocaleDateString()}
               </p>
+              {review.disciplines.length > 0 && (
+                <div className="mt-1.5 flex flex-wrap gap-1">
+                  {review.disciplines.map((discipline) => (
+                    <Badge key={discipline} variant="secondary">
+                      {discipline}
+                    </Badge>
+                  ))}
+                </div>
+              )}
             </div>
             {review.blacklist && <Badge variant="destructive">Blacklisted</Badge>}
           </div>
