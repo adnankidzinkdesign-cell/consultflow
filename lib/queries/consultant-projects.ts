@@ -26,3 +26,30 @@ export async function getConsultantProjectNames(
 
   return (projects ?? []).map((p) => p.name).sort();
 }
+
+/**
+ * Same idea as `getConsultantProjectNames`, but for every consultant at
+ * once — used by the consultants list, which now filters client-side and
+ * needs each row's project names available up front rather than re-querying
+ * per consultant_id on every filter change.
+ */
+export async function getAllConsultantProjectNames(
+  supabase: Awaited<ReturnType<typeof createClient>>
+): Promise<Record<string, string[]>> {
+  const [{ data: links }, { data: projects }] = await Promise.all([
+    supabase.from("consultant_projects").select("consultant_id, project_id"),
+    supabase.from("projects").select("id, name"),
+  ]);
+
+  const nameById = new Map((projects ?? []).map((p) => [p.id, p.name]));
+  const result: Record<string, string[]> = {};
+  for (const link of links ?? []) {
+    const name = nameById.get(link.project_id);
+    if (!name) continue;
+    (result[link.consultant_id] ??= []).push(name);
+  }
+  for (const consultantId of Object.keys(result)) {
+    result[consultantId].sort();
+  }
+  return result;
+}

@@ -2,56 +2,32 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getSessionProfile } from "@/lib/auth/getSessionProfile";
 import { Button } from "@/components/ui/button";
-import { ConsultantTable } from "@/components/consultflow/consultant-table";
-import { ConsultantFilters } from "@/components/consultflow/consultant-filters";
+import { ConsultantsBrowser } from "@/components/consultflow/consultants-browser";
+import { getAllConsultantProjectNames } from "@/lib/queries/consultant-projects";
+import { getConsultantRatings } from "@/lib/queries/consultant-ratings";
 
-export default async function ConsultantsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{
-    q?: string;
-    discipline?: string;
-    region?: string;
-    status?: string;
-  }>;
-}) {
-  const { q, discipline, region, status } = await searchParams;
+/**
+ * Filtering used to be server-side (search params -> a re-filtered Supabase
+ * query -> full page navigation), but with ~40 consultants that made every
+ * filter change wait on a round trip for no real benefit — the whole list
+ * fits in memory comfortably. So this page just fetches everything once and
+ * hands it to ConsultantsBrowser (a Client Component) to filter instantly
+ * in the browser. Trade-off: filters no longer live in the URL, so they
+ * don't survive a refresh or a shared link — acceptable for an internal
+ * tool at this scale.
+ */
+export default async function ConsultantsPage() {
   const [profile, supabase] = await Promise.all([
     getSessionProfile(),
     createClient(),
   ]);
 
-  let query = supabase.from("consultants").select("*").order("company_name");
-
-  if (q) {
-    query = query.or(`company_name.ilike.%${q}%,contact_name.ilike.%${q}%`);
-  }
-  if (discipline && discipline !== "all") {
-    query = query.contains("disciplines", [discipline]);
-  }
-  if (region) {
-    query = query.contains("regions", [region]);
-  }
-  if (status && status !== "all") {
-    query = query.eq(
-      "status",
-      status as "pending_review" | "approved" | "rejected" | "suspended"
-    );
-  }
-
-  const [{ data: consultants }, { data: disciplineRows }, { data: regionRows }] =
+  const [{ data: consultants }, projectNamesByConsultant, ratingsByConsultant] =
     await Promise.all([
-      query,
-      supabase.from("consultants").select("disciplines"),
-      supabase.from("consultants").select("regions"),
+      supabase.from("consultants").select("*").order("company_name"),
+      getAllConsultantProjectNames(supabase),
+      getConsultantRatings(supabase),
     ]);
-
-  const disciplines = Array.from(
-    new Set((disciplineRows ?? []).flatMap((r) => r.disciplines))
-  ).sort();
-  const regions = Array.from(
-    new Set((regionRows ?? []).flatMap((r) => r.regions))
-  ).sort();
 
   return (
     <div className="space-y-6">
@@ -67,18 +43,10 @@ export default async function ConsultantsPage({
         )}
       </div>
 
-      <ConsultantFilters
-        q={q}
-        discipline={discipline}
-        region={region}
-        status={status}
-        disciplines={disciplines}
-        regions={regions}
-      />
-
-      <ConsultantTable
+      <ConsultantsBrowser
         consultants={consultants ?? []}
-        activeDiscipline={discipline && discipline !== "all" ? discipline : undefined}
+        projectNamesByConsultant={projectNamesByConsultant}
+        ratingsByConsultant={ratingsByConsultant}
       />
     </div>
   );

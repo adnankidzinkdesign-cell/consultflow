@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,46 +30,69 @@ const STATUS_LABELS = Object.fromEntries(
   STATUS_OPTIONS.map((opt) => [opt.value, opt.label])
 ) as Record<ConsultantStatus, string>;
 
+export interface ConsultantFilterValues {
+  q: string;
+  /** A discipline value, or "all". */
+  discipline: string;
+  /** A region value, or "all". */
+  region: string;
+  /** A project name, or "all". */
+  project: string;
+  /** A ConsultantStatus value, or "all". */
+  status: string;
+}
+
+export const DEFAULT_CONSULTANT_FILTERS: ConsultantFilterValues = {
+  q: "",
+  discipline: "all",
+  region: "all",
+  project: "all",
+  status: "all",
+};
+
 /**
- * Plain GET form — submitting re-navigates to /consultants with the chosen
- * filters as query params, which the list page (a Server Component) reads
- * directly. No client-side JS needed for filtering, including the
- * Comboboxes below — Base UI's Combobox.Root takes a `name` prop and
- * renders a hidden native input, same as Select does.
+ * Fully controlled — the parent (ConsultantsBrowser) owns filter state and
+ * re-filters the in-memory consultant list on every change, so there's no
+ * form submission/navigation here, just live updates as you type/select.
  */
 export function ConsultantFilters({
-  q,
-  discipline,
-  region,
-  status,
+  value,
+  onChange,
   disciplines,
   regions,
+  projects,
 }: {
-  q?: string;
-  discipline?: string;
-  region?: string;
-  status?: string;
+  value: ConsultantFilterValues;
+  onChange: (value: ConsultantFilterValues) => void;
   disciplines: string[];
   regions: string[];
+  projects: string[];
 }) {
-  // Re-mount the whole form (rather than update in place) whenever the
-  // active filters change — the Select/Combobox fields below use
-  // `defaultValue` (uncontrolled), and Base UI warns if that changes on an
-  // already-mounted instance, which happens when navigating between
-  // filtered URLs without a full page reload.
-  const formKey = `${q ?? ""}|${discipline ?? ""}|${region ?? ""}|${status ?? ""}`;
+  const hasActiveFilters =
+    value.q !== "" ||
+    value.discipline !== "all" ||
+    value.region !== "all" ||
+    value.project !== "all" ||
+    value.status !== "all";
+
+  function set<K extends keyof ConsultantFilterValues>(
+    key: K,
+    next: ConsultantFilterValues[K]
+  ) {
+    onChange({ ...value, [key]: next });
+  }
 
   return (
-    <form key={formKey} className="flex flex-wrap items-end gap-3" action="/consultants">
+    <div className="flex flex-wrap items-end gap-3">
       <div className="flex flex-col gap-1.5">
         <label htmlFor="q" className="text-xs font-medium text-muted-foreground">
           Search
         </label>
         <Input
           id="q"
-          name="q"
           placeholder="Company or contact name"
-          defaultValue={q}
+          value={value.q}
+          onChange={(e) => set("q", e.target.value)}
           className="w-56"
         />
       </div>
@@ -79,7 +101,12 @@ export function ConsultantFilters({
         <label htmlFor="discipline" className="text-xs font-medium text-muted-foreground">
           Disciplines
         </label>
-        <Combobox items={disciplines} name="discipline" defaultValue={discipline || null} autoHighlight>
+        <Combobox
+          items={disciplines}
+          value={value.discipline === "all" ? null : value.discipline}
+          onValueChange={(next) => set("discipline", next ?? "all")}
+          autoHighlight
+        >
           <ComboboxInput
             id="discipline"
             placeholder="Any discipline"
@@ -103,8 +130,37 @@ export function ConsultantFilters({
         <label htmlFor="region" className="text-xs font-medium text-muted-foreground">
           Region
         </label>
-        <Combobox items={regions} name="region" defaultValue={region || null} autoHighlight>
+        <Combobox
+          items={regions}
+          value={value.region === "all" ? null : value.region}
+          onValueChange={(next) => set("region", next ?? "all")}
+          autoHighlight
+        >
           <ComboboxInput id="region" placeholder="Any region" showClear className="w-40" />
+          <ComboboxContent>
+            <ComboboxEmpty>No matches</ComboboxEmpty>
+            <ComboboxList>
+              {(item: string) => (
+                <ComboboxItem key={item} value={item}>
+                  {item}
+                </ComboboxItem>
+              )}
+            </ComboboxList>
+          </ComboboxContent>
+        </Combobox>
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="project" className="text-xs font-medium text-muted-foreground">
+          Project
+        </label>
+        <Combobox
+          items={projects}
+          value={value.project === "all" ? null : value.project}
+          onValueChange={(next) => set("project", next ?? "all")}
+          autoHighlight
+        >
+          <ComboboxInput id="project" placeholder="Any project" showClear className="w-40" />
           <ComboboxContent>
             <ComboboxEmpty>No matches</ComboboxEmpty>
             <ComboboxList>
@@ -122,11 +178,11 @@ export function ConsultantFilters({
         <label htmlFor="status" className="text-xs font-medium text-muted-foreground">
           Status
         </label>
-        <Select name="status" defaultValue={status || "all"}>
+        <Select value={value.status} onValueChange={(next) => set("status", next ?? "all")}>
           <SelectTrigger id="status" className="w-44">
             <SelectValue placeholder="All statuses">
-              {(value: string) =>
-                value === "all" ? "All statuses" : STATUS_LABELS[value as ConsultantStatus]
+              {(v: string) =>
+                v === "all" ? "All statuses" : STATUS_LABELS[v as ConsultantStatus]
               }
             </SelectValue>
           </SelectTrigger>
@@ -141,12 +197,11 @@ export function ConsultantFilters({
         </Select>
       </div>
 
-      <Button type="submit" variant="secondary">
-        Filter
-      </Button>
-      {(q || discipline || region || status) && (
-        <Button variant="ghost" nativeButton={false} render={<Link href="/consultants">Clear</Link>} />
+      {hasActiveFilters && (
+        <Button variant="ghost" onClick={() => onChange(DEFAULT_CONSULTANT_FILTERS)}>
+          Clear
+        </Button>
       )}
-    </form>
+    </div>
   );
 }

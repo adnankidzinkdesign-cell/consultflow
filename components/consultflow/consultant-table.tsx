@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { StarIcon } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -9,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { ConsultantStatusBadge, TierBadge } from "@/components/consultflow/status-badges";
 import type { Database } from "@/lib/supabase/types";
+import type { ConsultantRatingSummary } from "@/lib/queries/consultant-ratings";
 
 type Consultant = Database["public"]["Tables"]["consultants"]["Row"];
 
@@ -33,10 +35,13 @@ function formatDisciplines(disciplines: string[]): string {
 export function ConsultantTable({
   consultants,
   activeDiscipline,
+  ratings,
 }: {
   consultants: Consultant[];
   /** The currently selected discipline filter, if any ("all" shows every discipline). */
   activeDiscipline?: string;
+  /** Overall average rating + review count per consultant id, if any reviews exist. */
+  ratings?: Record<string, ConsultantRatingSummary>;
 }) {
   if (consultants.length === 0) {
     return (
@@ -54,6 +59,7 @@ export function ConsultantTable({
             <TableHead>Company</TableHead>
             <TableHead>Disciplines</TableHead>
             <TableHead>Regions</TableHead>
+            <TableHead>Rating</TableHead>
             <TableHead>Tier</TableHead>
             <TableHead>Status</TableHead>
           </TableRow>
@@ -85,6 +91,21 @@ export function ConsultantTable({
               <TableCell>
                 <Link href={`/consultants/${c.id}`} className="block">
                   {c.regions.length > 0 ? c.regions.join(", ") : "—"}
+                </Link>
+              </TableCell>
+              <TableCell>
+                <Link href={`/consultants/${c.id}`} className="flex items-center gap-1">
+                  {ratings?.[c.id] ? (
+                    <>
+                      <StarIcon className="size-3.5 fill-current text-[color:var(--color-amber)]" />
+                      <span className="text-foreground">{ratings[c.id].average.toFixed(1)}</span>
+                      <span className="text-xs text-muted-foreground">
+                        ({ratings[c.id].count})
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-muted-foreground">—</span>
+                  )}
                 </Link>
               </TableCell>
               <TableCell>
