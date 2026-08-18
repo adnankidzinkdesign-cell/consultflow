@@ -8,20 +8,19 @@ import { Button } from "@/components/ui/button";
 import { devAuth } from "@/lib/actions/dev-auth";
 
 /**
- * Local-only email/password sign-in, rendered by the login page only when
- * NODE_ENV !== "production" (see lib/actions/dev-auth.ts for why that's
- * safe). Exists so ConsultFlow can be tested before Azure/Entra ID
- * approval comes through — not a security shortcut, just a different way
- * to get a real Supabase session locally.
+ * Email/password sign-in, rendered by the login page only when
+ * isEmailLoginEnabled() is true (see lib/actions/dev-auth.ts) — always in
+ * local dev, and in production only while ENABLE_EMAIL_LOGIN=true is set.
+ * Exists so ConsultFlow can be tested before Azure/Entra ID approval comes
+ * through, or by reviewers without a KidzInk Microsoft 365 account — not a
+ * security shortcut, just a different way to get a real Supabase session.
  */
 export function DevAuthForm() {
   const [state, formAction, pending] = useActionState(devAuth, { error: null });
 
   return (
     <div className="space-y-3 rounded-md border border-dashed border-border p-4">
-      <p className="text-xs font-medium text-muted-foreground">
-        Dev sign-in (local only — never shown in production)
-      </p>
+      <p className="text-xs font-medium text-muted-foreground">Email sign-in</p>
 
       {state.error && (
         <p

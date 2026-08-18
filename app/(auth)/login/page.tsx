@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { signInWithAzure } from "@/lib/actions/auth";
+import { isEmailLoginEnabled } from "@/lib/auth/emailLoginEnabled";
 import { Button } from "@/components/ui/button";
 import { DevAuthForm } from "@/components/consultflow/dev-auth-form";
 import { ThemeToggle } from "@/components/consultflow/theme-toggle";
@@ -63,7 +64,7 @@ export default async function LoginPage({
           Use your KidzInk Microsoft 365 work account.
         </p>
 
-        {process.env.NODE_ENV !== "production" && <DevAuthForm />}
+        {isEmailLoginEnabled() && <DevAuthForm />}
       </div>
     </div>
   );

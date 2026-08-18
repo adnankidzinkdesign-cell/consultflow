@@ -13,7 +13,9 @@ Stack: **Next.js (App Router)** on **Netlify**, **Supabase** (Postgres, Auth, St
 
 ### 2. Microsoft 365 / Entra ID sign-in
 
-ConsultFlow only supports signing in with a KidzInk Microsoft 365 work account — no email/password.
+ConsultFlow only supports signing in with a KidzInk Microsoft 365 work account — no email/password, except for the temporary override described below.
+
+> **Email login on the deployed site (temporary).** Set `ENABLE_EMAIL_LOGIN=true` in Netlify's environment variables (and redeploy) to also show the email/password sign-up form on the live login page — useful for someone without a KidzInk Microsoft 365 account, e.g. a designer reviewing the UI. It creates a real Supabase session (same RLS as SSO), defaults new accounts to the `project_lead` role, and skips the `ALLOWED_EMAIL_DOMAIN` check. Unset the variable (or redeploy without it) once it's no longer needed.
 
 1. In [Entra ID (Azure AD) → App registrations](https://portal.azure.com), register a new app, **single-tenant** (accounts in this organizational directory only).
 2. Add a client secret; note the **Application (client) ID**, the secret, and your **Directory (tenant) ID**.

@@ -2,35 +2,37 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { isEmailLoginEnabled } from "@/lib/auth/emailLoginEnabled";
 
 export interface DevAuthState {
   error: string | null;
 }
 
-const isDevEnvironment = process.env.NODE_ENV !== "production";
-
 /**
- * Local-only email/password sign-in/sign-up, so ConsultFlow can be tested
- * end-to-end before an Entra ID app registration is approved.
+ * Email/password sign-in/sign-up. Normally local-only (see
+ * isEmailLoginEnabled), so ConsultFlow can be tested end-to-end before an
+ * Entra ID app registration is approved, or temporarily enabled in
+ * production via ENABLE_EMAIL_LOGIN for non-org reviewers.
  *
  * This is NOT a bypass of Supabase Auth or Row Level Security — it
  * establishes a real Supabase session via the built-in email/password
  * provider, so every RLS policy and role check behaves exactly as it will
  * with Microsoft SSO. Sign up once, then promote yourself to admin the
  * same way the README describes for the real flow; this doesn't skip that.
+ * Note it also bypasses the ALLOWED_EMAIL_DOMAIN check (that check only
+ * runs in the OAuth callback), so this is intentionally the path for
+ * non-kidzink.com accounts.
  *
- * Gated on NODE_ENV so it can never run against a deployed (production)
- * build — `next build` always sets NODE_ENV=production, which is also why
- * the login page only renders the dev section when this is true. This
- * action re-checks it independently in case that UI gate were ever
- * bypassed, so a direct request against a deployed instance still fails.
+ * The login page only renders the email form when isEmailLoginEnabled()
+ * is true; this action re-checks it independently so a direct request
+ * against a deployed instance still fails once that's the case.
  */
 export async function devAuth(
   _prevState: DevAuthState,
   formData: FormData
 ): Promise<DevAuthState> {
-  if (!isDevEnvironment) {
-    return { error: "Dev sign-in is disabled in this environment." };
+  if (!isEmailLoginEnabled()) {
+    return { error: "Email sign-in is disabled in this environment." };
   }
 
   const email = (formData.get("email") as string)?.trim();
