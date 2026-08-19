@@ -9,28 +9,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ConsultantStatusBadge, TierBadge } from "@/components/consultflow/status-badges";
+import { DisciplineBadge, DisciplineBadgeList } from "@/components/consultflow/discipline-badge";
 import type { Database } from "@/lib/supabase/types";
 import type { ConsultantRatingSummary } from "@/lib/queries/consultant-ratings";
 
 type Consultant = Database["public"]["Tables"]["consultants"]["Row"];
 
-const DISCIPLINE_CHAR_LIMIT = 30;
-
-/**
- * Keeps the Disciplines column from forcing horizontal scroll: more than
- * one discipline collapses to a fixed label (the full list is one click
- * away on the detail page, or visible via the `title` tooltip), and a
- * single long discipline name gets truncated with an ellipsis instead of
- * stretching the column.
- */
-function formatDisciplines(disciplines: string[]): string {
-  if (disciplines.length === 0) return "—";
-  if (disciplines.length > 1) return "Multiple disciplines";
-  const [only] = disciplines;
-  return only.length > DISCIPLINE_CHAR_LIMIT
-    ? `${only.slice(0, DISCIPLINE_CHAR_LIMIT).trimEnd()}…`
-    : only;
-}
+/** Keeps a badge from stretching the column when a discipline name is long. */
+const TABLE_BADGE_CLASSNAME = "max-w-56";
 
 export function ConsultantTable({
   consultants,
@@ -83,9 +69,18 @@ export function ConsultantTable({
                   className="block"
                   title={c.disciplines.join(", ")}
                 >
-                  {activeDiscipline
-                    ? formatDisciplines([activeDiscipline])
-                    : formatDisciplines(c.disciplines)}
+                  {activeDiscipline ? (
+                    <DisciplineBadge
+                      discipline={activeDiscipline}
+                      className={TABLE_BADGE_CLASSNAME}
+                    />
+                  ) : (
+                    <DisciplineBadgeList
+                      disciplines={c.disciplines}
+                      max={1}
+                      badgeClassName={TABLE_BADGE_CLASSNAME}
+                    />
+                  )}
                 </Link>
               </TableCell>
               <TableCell>

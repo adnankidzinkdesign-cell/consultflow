@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
 import { getSessionProfile } from "@/lib/auth/getSessionProfile";
+import { getConsultantOptionValues } from "@/lib/queries/consultant-options";
 import { ConsultantForm } from "@/components/consultflow/consultant-form";
 import { createConsultant } from "@/lib/actions/consultants";
 
@@ -9,6 +11,9 @@ export default async function NewConsultantPage() {
     redirect("/consultants");
   }
 
+  const supabase = await createClient();
+  const { disciplines, regions } = await getConsultantOptionValues(supabase);
+
   return (
     <div className="space-y-6">
       <div>
@@ -17,7 +22,12 @@ export default async function NewConsultantPage() {
           Creates the record and seeds the screening checklist against it.
         </p>
       </div>
-      <ConsultantForm action={createConsultant} submitLabel="Add consultant" />
+      <ConsultantForm
+        action={createConsultant}
+        submitLabel="Add consultant"
+        disciplineSuggestions={disciplines}
+        regionSuggestions={regions}
+      />
     </div>
   );
 }

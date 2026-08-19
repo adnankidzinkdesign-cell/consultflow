@@ -1,4 +1,5 @@
 import { StarRatingDisplay } from "@/components/consultflow/star-rating-display";
+import { DisciplineBadge } from "@/components/consultflow/discipline-badge";
 import { Badge } from "@/components/ui/badge";
 import { FEEDBACK_CATEGORIES, type Database } from "@/lib/supabase/types";
 
@@ -38,9 +39,7 @@ export function ReviewList({
               {review.disciplines.length > 0 && (
                 <div className="mt-1.5 flex flex-wrap gap-1">
                   {review.disciplines.map((discipline) => (
-                    <Badge key={discipline} variant="secondary">
-                      {discipline}
-                    </Badge>
+                    <DisciplineBadge key={discipline} discipline={discipline} />
                   ))}
                 </div>
               )}
@@ -48,7 +47,7 @@ export function ReviewList({
             {review.blacklist && <Badge variant="destructive">Blacklisted</Badge>}
           </div>
 
-          <div className="space-y-1.5">
+          <div className="grid grid-cols-1 gap-x-8 gap-y-1.5 sm:grid-cols-2">
             {FEEDBACK_CATEGORIES.map(({ key, label }) => (
               <StarRatingDisplay key={key} label={label} value={review[key]} />
             ))}

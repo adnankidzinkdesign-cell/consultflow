@@ -9,6 +9,43 @@ import type {
   ConsultantTier,
 } from "@/lib/supabase/types";
 
+export interface ConsultantQuickEditResult {
+  error: string | null;
+}
+
+/**
+ * Updates only `status`/`tier` — used by the inline quick-edit dropdowns on
+ * the consultant detail page (Admin View, Kidzink_Digital-Transformations
+ * Figma file), separate from `updateConsultant` because that one requires
+ * the full form payload (company name, at least one discipline, etc.) and
+ * redirects on success, neither of which fits an auto-save-on-change control
+ * that stays on the same page.
+ */
+export async function updateConsultantStatusAndTier(
+  consultantId: string,
+  status: ConsultantStatus,
+  tier: ConsultantTier
+): Promise<ConsultantQuickEditResult> {
+  const profile = await getSessionProfile();
+  if (!profile || profile.role !== "admin") {
+    return { error: "Only admins can change status/tier." };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("consultants")
+    .update({ status, tier })
+    .eq("id", consultantId);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidatePath("/consultants");
+  revalidatePath(`/consultants/${consultantId}`);
+  return { error: null };
+}
+
 export interface ConsultantFormState {
   error: string | null;
 }

@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getSessionProfile } from "@/lib/auth/getSessionProfile";
 import { getConsultantProjectNames } from "@/lib/queries/consultant-projects";
+import { getConsultantOptionValues } from "@/lib/queries/consultant-options";
 import { ConsultantForm } from "@/components/consultflow/consultant-form";
 import { updateConsultant } from "@/lib/actions/consultants";
 
@@ -25,7 +26,10 @@ export default async function EditConsultantPage({
 
   if (!consultant) notFound();
 
-  const projectNames = await getConsultantProjectNames(supabase, id);
+  const [projectNames, { disciplines, regions }] = await Promise.all([
+    getConsultantProjectNames(supabase, id),
+    getConsultantOptionValues(supabase),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -38,6 +42,8 @@ export default async function EditConsultantPage({
         action={updateConsultant.bind(null, id)}
         consultant={consultant}
         projectNames={projectNames}
+        disciplineSuggestions={disciplines}
+        regionSuggestions={regions}
         submitLabel="Save changes"
       />
     </div>

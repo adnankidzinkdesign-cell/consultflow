@@ -3,8 +3,12 @@ import { createClient } from "@/lib/supabase/server";
 import { getSessionProfile } from "@/lib/auth/getSessionProfile";
 import { Button } from "@/components/ui/button";
 import { ConsultantsBrowser } from "@/components/consultflow/consultants-browser";
+import { ConsultantMetrics } from "@/components/consultflow/consultant-metrics";
 import { getAllConsultantProjectNames } from "@/lib/queries/consultant-projects";
-import { getConsultantRatings } from "@/lib/queries/consultant-ratings";
+import {
+  getConsultantRatings,
+  getBlacklistedConsultantIds,
+} from "@/lib/queries/consultant-ratings";
 
 /**
  * Filtering used to be server-side (search params -> a re-filtered Supabase
@@ -22,12 +26,19 @@ export default async function ConsultantsPage() {
     createClient(),
   ]);
 
-  const [{ data: consultants }, projectNamesByConsultant, ratingsByConsultant] =
-    await Promise.all([
-      supabase.from("consultants").select("*").order("company_name"),
-      getAllConsultantProjectNames(supabase),
-      getConsultantRatings(supabase),
-    ]);
+  const [
+    { data: consultants },
+    projectNamesByConsultant,
+    ratingsByConsultant,
+    blacklistedIds,
+  ] = await Promise.all([
+    supabase.from("consultants").select("*").order("company_name"),
+    getAllConsultantProjectNames(supabase),
+    getConsultantRatings(supabase),
+    getBlacklistedConsultantIds(supabase),
+  ]);
+
+  const all = consultants ?? [];
 
   return (
     <div className="space-y-6">
@@ -43,8 +54,15 @@ export default async function ConsultantsPage() {
         )}
       </div>
 
+      <ConsultantMetrics
+        total={all.length}
+        approved={all.filter((c) => c.status === "approved").length}
+        pendingReview={all.filter((c) => c.status === "pending_review").length}
+        blacklisted={all.filter((c) => blacklistedIds.has(c.id)).length}
+      />
+
       <ConsultantsBrowser
-        consultants={consultants ?? []}
+        consultants={all}
         projectNamesByConsultant={projectNamesByConsultant}
         ratingsByConsultant={ratingsByConsultant}
       />
