@@ -34,7 +34,7 @@ export default async function EditConsultantPage({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold text-foreground">
+        <h1 className="text-display-xs font-bold text-foreground">
           Edit {consultant.company_name}
         </h1>
       </div>

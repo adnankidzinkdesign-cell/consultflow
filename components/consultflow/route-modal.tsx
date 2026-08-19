@@ -40,7 +40,7 @@ export function RouteModal({
     >
       <DialogContent className={className ?? "sm:max-w-xl"}>
         <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
+          <DialogTitle className="text-display-xs font-bold">{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
         {children}

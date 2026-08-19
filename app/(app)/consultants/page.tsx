@@ -44,7 +44,7 @@ export default async function ConsultantsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-foreground">Consultants</h1>
+          <h1 className="text-display-xs font-bold text-foreground">Consultants</h1>
           <p className="text-sm text-muted-foreground">
             The approved-list pipeline: screening checklist status at a glance.
           </p>

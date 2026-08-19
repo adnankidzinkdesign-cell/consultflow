@@ -49,6 +49,37 @@
 }
 
 /*
+ * KidzInk type scale (Poppins) — Foundation → Typography in the
+ * Kidzink_Digital-Transformations Figma file. "text-sm"/"text-base"/
+ * "text-lg" already matched this spec exactly under Tailwind's own
+ * defaults, so only "text-xs"/"text-xl" get their line-height corrected
+ * here; the "display-*" steps are new, for page/section headings.
+ */
+@theme {
+  --text-display-2xl: 4.5rem;
+  --text-display-2xl--line-height: 5.625rem;
+  --text-display-2xl--letter-spacing: -0.02em;
+  --text-display-xl: 3.75rem;
+  --text-display-xl--line-height: 4.5rem;
+  --text-display-xl--letter-spacing: -0.02em;
+  --text-display-lg: 3rem;
+  --text-display-lg--line-height: 3.75rem;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display-md: 2.25rem;
+  --text-display-md--line-height: 2.75rem;
+  --text-display-md--letter-spacing: -0.02em;
+  --text-display-sm: 1.875rem;
+  --text-display-sm--line-height: 2.375rem;
+  --text-display-xs: 1.5rem;
+  --text-display-xs--line-height: 2rem;
+
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 1.875rem;
+}
+
+/*
  * KidzInk brand tokens, matched to D:\codebase\creator2\app\theme.css so
  * ConsultFlow stays visually consistent with the other internal tools.
  * Semantic shadcn/ui variables (--primary, etc.) are mapped onto them below.

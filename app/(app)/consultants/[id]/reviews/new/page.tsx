@@ -31,7 +31,7 @@ export default async function NewReviewPage({
       </Link>
 
       <div>
-        <h1 className="text-xl font-semibold text-foreground">
+        <h1 className="text-display-xs font-bold text-foreground">
           Review {consultant.company_name}
         </h1>
         <p className="text-sm text-muted-foreground">

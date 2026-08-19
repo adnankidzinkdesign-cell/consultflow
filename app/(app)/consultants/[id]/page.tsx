@@ -77,7 +77,7 @@ export default async function ConsultantDetailPage({
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div className="min-w-0 flex-1 space-y-4">
           <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-xl font-semibold text-foreground">
+            <h1 className="text-display-xs font-bold text-foreground">
               {consultant.company_name}
             </h1>
             {profile?.role !== "admin" && (
@@ -146,7 +146,7 @@ export default async function ConsultantDetailPage({
         {averages && (
           <div className="space-y-1.5 rounded-lg border border-border bg-card p-4">
             <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Average across all reviews
+              Average across ({reviews?.length ?? 0}) reviews
             </p>
             <div className="grid grid-cols-1 gap-x-8 gap-y-1.5 sm:grid-cols-2">
               {FEEDBACK_CATEGORIES.map(({ key, label }) => (
@@ -156,7 +156,7 @@ export default async function ConsultantDetailPage({
           </div>
         )}
 
-        <h2 className="text-xl font-bold text-foreground">
+        <h2 className="text-display-xs font-bold text-foreground">
           Feedback reviews {reviews && reviews.length > 0 && `(${reviews.length})`}
         </h2>
 
