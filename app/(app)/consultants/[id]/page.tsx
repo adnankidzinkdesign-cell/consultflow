@@ -80,12 +80,8 @@ export default async function ConsultantDetailPage({
             <h1 className="text-display-xs font-bold text-foreground">
               {consultant.company_name}
             </h1>
-            {profile?.role !== "admin" && (
-              <>
-                <ConsultantStatusBadge status={consultant.status} />
-                <TierBadge tier={consultant.tier} />
-              </>
-            )}
+            <ConsultantStatusBadge status={consultant.status} />
+            {profile?.role !== "admin" && <TierBadge tier={consultant.tier} />}
             {isBlacklisted && <BlacklistedBadge />}
           </div>
 
