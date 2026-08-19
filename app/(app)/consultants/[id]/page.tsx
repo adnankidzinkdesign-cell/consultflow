@@ -71,8 +71,8 @@ export default async function ConsultantDetailPage({
         Back to consultants
       </Link>
 
-      <div className="space-y-6">
-        <div className="flex flex-wrap items-start justify-between gap-4">
+      <div className="flex flex-wrap items-start justify-between gap-6">
+        <div className="min-w-0 flex-1 space-y-4">
           <div className="flex flex-wrap items-center gap-2">
             <h1 className="text-xl font-semibold text-foreground">
               {consultant.company_name}
@@ -86,6 +86,40 @@ export default async function ConsultantDetailPage({
             {isBlacklisted && <Badge variant="destructive">Blacklisted</Badge>}
           </div>
 
+          {profile?.role === "admin" && (
+            <ConsultantQuickEdit
+              consultantId={id}
+              status={consultant.status}
+              tier={consultant.tier}
+            />
+          )}
+
+          <div>
+            <p className="mb-1 text-xs uppercase tracking-wide text-muted-foreground">
+              Disciplines
+            </p>
+            <DisciplineBadgeList disciplines={consultant.disciplines} />
+          </div>
+          <dl className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm text-muted-foreground sm:grid-cols-3">
+            <div>
+              <dt className="text-xs uppercase tracking-wide">Regions</dt>
+              <dd className="text-foreground">
+                {consultant.regions.length > 0 ? consultant.regions.join(", ") : "—"}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-xs uppercase tracking-wide">Projects</dt>
+              <dd className="text-foreground">
+                {projectNames.length > 0 ? projectNames.join(", ") : "—"}
+              </dd>
+            </div>
+          </dl>
+          {consultant.notes && (
+            <p className="max-w-2xl text-sm text-muted-foreground">{consultant.notes}</p>
+          )}
+        </div>
+
+        <div className="flex w-full shrink-0 flex-col items-end gap-4 sm:w-72">
           <div className="flex gap-2">
             <Button
               variant="outline"
@@ -100,54 +134,12 @@ export default async function ConsultantDetailPage({
               />
             )}
           </div>
-        </div>
-
-        {profile?.role === "admin" && (
-          <ConsultantQuickEdit
-            consultantId={id}
-            status={consultant.status}
-            tier={consultant.tier}
-          />
-        )}
-
-        <div className="flex flex-wrap items-start justify-between gap-6">
-          <div className="min-w-0 flex-1 space-y-3">
-            <div>
-              <p className="mb-1 text-xs uppercase tracking-wide text-muted-foreground">
-                Disciplines
-              </p>
-              <DisciplineBadgeList disciplines={consultant.disciplines} />
-            </div>
-            <dl className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm text-muted-foreground sm:grid-cols-3">
-              <div>
-                <dt className="text-xs uppercase tracking-wide">Projects</dt>
-                <dd className="text-foreground">
-                  {projectNames.length > 0 ? projectNames.join(", ") : "—"}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs uppercase tracking-wide">Regions</dt>
-                <dd className="text-foreground">
-                  {consultant.regions.length > 0 ? consultant.regions.join(", ") : "—"}
-                </dd>
-              </div>
-            </dl>
-            {consultant.notes && (
-              <p className="max-w-2xl text-sm text-muted-foreground">{consultant.notes}</p>
-            )}
-          </div>
 
           <ConsultantContactCard consultant={consultant} />
         </div>
       </div>
 
-      <section className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-foreground">
-            Feedback reviews {reviews && reviews.length > 0 && `(${reviews.length})`}
-          </h2>
-        </div>
-
+      <section className="space-y-4">
         {averages && (
           <div className="space-y-1.5 rounded-lg border border-border bg-card p-4">
             <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
@@ -160,6 +152,10 @@ export default async function ConsultantDetailPage({
             </div>
           </div>
         )}
+
+        <h2 className="text-xl font-bold text-foreground">
+          Feedback reviews {reviews && reviews.length > 0 && `(${reviews.length})`}
+        </h2>
 
         <ReviewList reviews={reviews ?? []} reviewerNames={reviewerNames} />
       </section>
