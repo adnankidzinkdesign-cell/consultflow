@@ -41,7 +41,7 @@ export function ConsultantTable({
     <div className="overflow-x-auto rounded-lg border border-border">
       <Table>
         <TableHeader>
-          <TableRow>
+          <TableRow className="bg-muted hover:bg-muted">
             <TableHead>Company</TableHead>
             <TableHead>Disciplines</TableHead>
             <TableHead>Regions</TableHead>
