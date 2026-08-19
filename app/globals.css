@@ -161,7 +161,9 @@
   --accent-foreground: #18181b;
   --destructive: oklch(0.577 0.245 27.325);
   --border: #e5dfd5;
-  --input: #e5dfd5;
+  /* Neutral/300 (#d4d4d4) from the Figma Input component spec — was
+     #e5dfd5, borrowed from --border rather than its own value. */
+  --input: #d4d4d4;
   --ring: var(--color-accent-edge);
   --chart-1: var(--color-accent);
   --chart-2: var(--color-amber);
