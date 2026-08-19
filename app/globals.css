@@ -77,6 +77,25 @@
   --text-xs--line-height: 1.125rem;
   --text-xl: 1.25rem;
   --text-xl--line-height: 1.875rem;
+
+  /*
+   * Full Brand ramp as real Tailwind theme colors (bg-brand-600 etc.),
+   * not just CSS custom properties — Tailwind v4 only auto-generates
+   * utilities from --color-* names declared inside @theme, not from a
+   * plain :root declaration (which only works via bg-[var(--x)] arbitrary
+   * syntax). Values from the same Figma source as the type scale above.
+   */
+  --color-brand-50: #fef5f4;
+  --color-brand-100: #fce6e4;
+  --color-brand-200: #f7c5c0;
+  --color-brand-300: #f19e97;
+  --color-brand-400: #eb6e63;
+  --color-brand-500: #e85b4e;
+  --color-brand-600: #e43e2f;
+  --color-brand-700: #b63226;
+  --color-brand-800: #94281f;
+  --color-brand-900: #721f18;
+  --color-brand-950: #501610;
 }
 
 /*
@@ -95,20 +114,6 @@
   --color-accent-soft: rgba(228, 62, 47, 0.1);
   --color-accent-edge: rgba(228, 62, 47, 0.28);
   --color-on-accent: #ffffff;
-
-  /* Full Brand ramp, for anything that needs a lighter/darker step than
-     the single accent color above (source: same Figma page as the note). */
-  --color-brand-50: #fef5f4;
-  --color-brand-100: #fce6e4;
-  --color-brand-200: #f7c5c0;
-  --color-brand-300: #f19e97;
-  --color-brand-400: #eb6e63;
-  --color-brand-500: #e85b4e;
-  --color-brand-600: #e43e2f;
-  --color-brand-700: #b63226;
-  --color-brand-800: #94281f;
-  --color-brand-900: #721f18;
-  --color-brand-950: #501610;
 
   --color-amber: #e0a340;
   --color-amber-soft: #faeeda;
