@@ -70,6 +70,31 @@
   --color-pink-soft: #fbeaf0;
   --color-pink-ink: #99375a;
 
+  /*
+   * Additional badge hues, from the KidzInk design-system foundation
+   * (Kidzink_Digital-Transformations Figma file, Foundation → Colors).
+   * Used to color-code free-text discipline tags — see
+   * components/consultflow/discipline-badge.tsx.
+   */
+  --color-red: #ef4444;
+  --color-red-soft: #fee2e2;
+  --color-red-ink: #991b1b;
+  --color-orange: #f97316;
+  --color-orange-soft: #ffedd5;
+  --color-orange-ink: #9a3412;
+  --color-green: #22c55e;
+  --color-green-soft: #dcfce7;
+  --color-green-ink: #166534;
+  --color-sky: #0ea5e9;
+  --color-sky-soft: #e0f2fe;
+  --color-sky-ink: #075985;
+  --color-blue: #3b82f6;
+  --color-blue-soft: #dbeafe;
+  --color-blue-ink: #1e40af;
+  --color-rose: #f43f5e;
+  --color-rose-soft: #ffe4e6;
+  --color-rose-ink: #9f1239;
+
   --background: #f5f3ef;
   --foreground: #18181b;
   --card: #ffffff;
