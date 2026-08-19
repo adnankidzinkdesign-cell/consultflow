@@ -84,7 +84,7 @@ export function DisciplineBadgeList({
         <DisciplineBadge key={discipline} discipline={discipline} className={badgeClassName} />
       ))}
       {overflow > 0 && (
-        <Badge className="bg-muted text-muted-foreground">
+        <Badge className="bg-neutral-200 text-neutral-700 dark:bg-neutral-500/15 dark:text-neutral-400">
           +{overflow}
         </Badge>
       )}

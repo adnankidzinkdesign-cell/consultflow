@@ -34,8 +34,8 @@ const CONSULTANT_STATUS_CONFIG: Record<
   rejected: { label: "Rejected", className: "", dotClassName: "bg-destructive" },
   suspended: {
     label: "Suspended",
-    className: "bg-muted text-muted-foreground",
-    dotClassName: "bg-muted-foreground",
+    className: "bg-neutral-200 text-neutral-700 dark:bg-neutral-500/15 dark:text-neutral-400",
+    dotClassName: "bg-neutral-500",
   },
 };
 
@@ -84,7 +84,7 @@ const TIER_CONFIG: Record<ConsultantTier, { label: string; className: string }> 
     label: "Tier 3",
     className: "bg-pink-100 text-pink-800 dark:bg-pink-500/15 dark:text-pink-400",
   },
-  unrated: { label: "Unrated", className: "bg-muted text-muted-foreground" },
+  unrated: { label: "Unrated", className: "bg-neutral-200 text-neutral-700 dark:bg-neutral-500/15 dark:text-neutral-400" },
 };
 
 /**
@@ -116,7 +116,7 @@ const CHECKLIST_STATUS_CONFIG: Record<
   ChecklistStatus,
   { label: string; className: string }
 > = {
-  not_submitted: { label: "Not submitted", className: "bg-muted text-muted-foreground" },
+  not_submitted: { label: "Not submitted", className: "bg-neutral-200 text-neutral-700 dark:bg-neutral-500/15 dark:text-neutral-400" },
   submitted: {
     label: "Submitted",
     className: "bg-[color:var(--color-amber-soft)] text-[color:var(--color-amber-ink)]",
