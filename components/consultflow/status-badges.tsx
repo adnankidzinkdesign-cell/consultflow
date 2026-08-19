@@ -51,7 +51,7 @@ export const CONSULTANT_STATUS_OPTIONS: { value: ConsultantStatus; label: string
 export function ConsultantStatusBadge({ status }: { status: ConsultantStatus }) {
   const config = CONSULTANT_STATUS_CONFIG[status];
   return (
-    <Badge variant={status === "rejected" ? "destructive" : "outline"} className={config.className}>
+    <Badge variant={status === "rejected" ? "destructive" : undefined} className={config.className}>
       <StatusDot className={config.dotClassName} />
       {config.label}
     </Badge>
@@ -106,7 +106,7 @@ export const CONSULTANT_TIER_OPTIONS: { value: ConsultantTier; label: string }[]
 export function TierBadge({ tier }: { tier: ConsultantTier }) {
   const config = TIER_CONFIG[tier];
   return (
-    <Badge variant="outline" className={config.className}>
+    <Badge className={config.className}>
       {config.label}
     </Badge>
   );
@@ -133,7 +133,7 @@ export function ChecklistStatusBadge({ status }: { status: ChecklistStatus }) {
   const config = CHECKLIST_STATUS_CONFIG[status];
   const isDestructive = status === "rejected" || status === "expired";
   return (
-    <Badge variant={isDestructive ? "destructive" : "outline"} className={config.className}>
+    <Badge variant={isDestructive ? "destructive" : undefined} className={config.className}>
       {config.label}
     </Badge>
   );

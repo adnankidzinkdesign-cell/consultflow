@@ -47,7 +47,7 @@ export function DisciplineBadge({
   className?: string;
 }) {
   return (
-    <Badge variant="outline" className={cn(disciplineBadgeClassName(discipline), className)}>
+    <Badge className={cn(disciplineBadgeClassName(discipline), className)}>
       {/* Ellipsis truncation needs a block-level text context — Badge is
           inline-flex, and text-overflow:ellipsis doesn't reliably apply to a
           flex container's direct text child, so the name gets its own inner
@@ -84,7 +84,7 @@ export function DisciplineBadgeList({
         <DisciplineBadge key={discipline} discipline={discipline} className={badgeClassName} />
       ))}
       {overflow > 0 && (
-        <Badge variant="outline" className="bg-muted text-muted-foreground">
+        <Badge className="bg-muted text-muted-foreground">
           +{overflow}
         </Badge>
       )}
