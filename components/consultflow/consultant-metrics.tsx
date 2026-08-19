@@ -20,12 +20,8 @@ export function ConsultantMetrics({
   const metrics: { label: string; value: number; dotClassName?: string }[] = [
     { label: "Total consultants", value: total },
     { label: "Approved", value: approved, dotClassName: "bg-green-500" },
-    {
-      label: "Pending review",
-      value: pendingReview,
-      dotClassName: "bg-[color:var(--color-amber)]",
-    },
-    { label: "Blacklisted", value: blacklisted, dotClassName: "bg-destructive" },
+    { label: "Pending review", value: pendingReview },
+    { label: "Blacklisted", value: blacklisted },
   ];
 
   return (
