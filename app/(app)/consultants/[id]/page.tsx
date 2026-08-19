@@ -144,7 +144,7 @@ export default async function ConsultantDetailPage({
 
       <section className="space-y-4">
         {averages && (
-          <div className="space-y-1.5 rounded-lg border border-border bg-card p-4">
+          <div className="space-y-1.5">
             <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
               Average across ({reviews?.length ?? 0}) reviews
             </p>
