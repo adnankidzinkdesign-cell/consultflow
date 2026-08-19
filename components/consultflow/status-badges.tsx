@@ -70,19 +70,22 @@ export function BlacklistedBadge() {
 
 // Tier is a categorical ranking, not a status meaning — like disciplines,
 // its colors come straight from the Foundation → Colors ramps (plain
-// Tailwind classes) rather than a fixed semantic choice.
+// Tailwind classes) rather than a fixed semantic choice. Tier 1's color
+// (pink) is confirmed via the literal Figma dashboard-table data (two
+// separate "Teir 1" badge instances, get_design_context on node 558:21749)
+// — /50 + /700 is the pairing every badge in the file actually uses.
 const TIER_CONFIG: Record<ConsultantTier, { label: string; className: string }> = {
   tier_1: {
     label: "Tier 1",
-    className: "bg-purple-100 text-purple-800 dark:bg-purple-500/15 dark:text-purple-400",
+    className: "bg-pink-50 text-pink-700 dark:bg-pink-500/15 dark:text-pink-400",
   },
   tier_2: {
     label: "Tier 2",
-    className: "bg-yellow-100 text-yellow-800 dark:bg-yellow-500/15 dark:text-yellow-400",
+    className: "bg-yellow-50 text-yellow-700 dark:bg-yellow-500/15 dark:text-yellow-400",
   },
   tier_3: {
     label: "Tier 3",
-    className: "bg-pink-100 text-pink-800 dark:bg-pink-500/15 dark:text-pink-400",
+    className: "bg-purple-50 text-purple-700 dark:bg-purple-500/15 dark:text-purple-400",
   },
   unrated: { label: "Unrated", className: "bg-neutral-200 text-neutral-700 dark:bg-neutral-500/15 dark:text-neutral-400" },
 };
