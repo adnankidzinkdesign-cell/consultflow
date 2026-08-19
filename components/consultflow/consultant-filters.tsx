@@ -176,7 +176,13 @@ export function ConsultantFilters({
       <Select value={value.status} onValueChange={(next) => set("status", next ?? "all")}>
         <SelectTrigger id="status" aria-label="Status" className="w-44">
           <SelectValue placeholder="Status">
-            {(v: string) => (v === "all" ? "Status" : STATUS_LABELS[v as ConsultantStatus])}
+            {(v: string) =>
+              v === "all" ? (
+                <span className="text-muted-foreground">Status</span>
+              ) : (
+                STATUS_LABELS[v as ConsultantStatus]
+              )
+            }
           </SelectValue>
         </SelectTrigger>
         <SelectContent>
