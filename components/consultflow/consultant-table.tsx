@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { StarIcon } from "@/components/consultflow/star-icon";
+import { FractionalStar } from "@/components/consultflow/star-icon";
 import {
   Table,
   TableBody,
@@ -92,7 +92,7 @@ export function ConsultantTable({
                 <Link href={`/consultants/${c.id}`} className="flex items-center gap-1">
                   {ratings?.[c.id] ? (
                     <>
-                      <StarIcon className="size-3.5 text-yellow-400" />
+                      <FractionalStar fill={ratings[c.id].average / 5} className="size-3.5" />
                       <span className="text-foreground">{ratings[c.id].average.toFixed(1)}</span>
                       <span className="text-xs text-muted-foreground">
                         ({ratings[c.id].count})
