@@ -85,11 +85,30 @@
  * Semantic shadcn/ui variables (--primary, etc.) are mapped onto them below.
  */
 :root {
-  --color-accent: #e43c2f;
+  /*
+   * #e43e2f is the exact "Brand/600" value from the KidzInk design-system
+   * foundation (Kidzink_Digital-Transformations Figma file, Foundation →
+   * Colors) — the official Kidzink Red. Was #e43c2f, one hex digit off.
+   */
+  --color-accent: #e43e2f;
   --color-accent-hover: #b92d22;
-  --color-accent-soft: rgba(228, 60, 47, 0.1);
-  --color-accent-edge: rgba(228, 60, 47, 0.28);
+  --color-accent-soft: rgba(228, 62, 47, 0.1);
+  --color-accent-edge: rgba(228, 62, 47, 0.28);
   --color-on-accent: #ffffff;
+
+  /* Full Brand ramp, for anything that needs a lighter/darker step than
+     the single accent color above (source: same Figma page as the note). */
+  --color-brand-50: #fef5f4;
+  --color-brand-100: #fce6e4;
+  --color-brand-200: #f7c5c0;
+  --color-brand-300: #f19e97;
+  --color-brand-400: #eb6e63;
+  --color-brand-500: #e85b4e;
+  --color-brand-600: #e43e2f;
+  --color-brand-700: #b63226;
+  --color-brand-800: #94281f;
+  --color-brand-900: #721f18;
+  --color-brand-950: #501610;
 
   --color-amber: #e0a340;
   --color-amber-soft: #faeeda;
