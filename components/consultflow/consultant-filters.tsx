@@ -4,13 +4,6 @@ import { SearchIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Combobox,
   ComboboxContent,
   ComboboxEmpty,
@@ -30,6 +23,10 @@ const STATUS_OPTIONS: { value: ConsultantStatus; label: string }[] = [
 const STATUS_LABELS = Object.fromEntries(
   STATUS_OPTIONS.map((opt) => [opt.value, opt.label])
 ) as Record<ConsultantStatus, string>;
+const STATUS_VALUES_BY_LABEL = Object.fromEntries(
+  STATUS_OPTIONS.map((opt) => [opt.label, opt.value])
+) as Record<string, ConsultantStatus>;
+const STATUS_ITEMS = STATUS_OPTIONS.map((opt) => opt.label);
 
 export interface ConsultantFilterValues {
   q: string;
@@ -173,27 +170,30 @@ export function ConsultantFilters({
         </ComboboxContent>
       </Combobox>
 
-      <Select value={value.status} onValueChange={(next) => set("status", next ?? "all")}>
-        <SelectTrigger id="status" aria-label="Status" className="w-44">
-          <SelectValue placeholder="Status">
-            {(v: string) =>
-              v === "all" ? (
-                <span className="text-muted-foreground">Status</span>
-              ) : (
-                STATUS_LABELS[v as ConsultantStatus]
-              )
-            }
-          </SelectValue>
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">Status</SelectItem>
-          {STATUS_OPTIONS.map((opt) => (
-            <SelectItem key={opt.value} value={opt.value}>
-              {opt.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <Combobox
+        items={STATUS_ITEMS}
+        value={value.status === "all" ? null : STATUS_LABELS[value.status as ConsultantStatus]}
+        onValueChange={(next) => set("status", next ? STATUS_VALUES_BY_LABEL[next] : "all")}
+        autoHighlight
+      >
+        <ComboboxInput
+          id="status"
+          aria-label="Status"
+          placeholder="Status"
+          showClear
+          className="w-44"
+        />
+        <ComboboxContent>
+          <ComboboxEmpty>No matches</ComboboxEmpty>
+          <ComboboxList>
+            {(item: string) => (
+              <ComboboxItem key={item} value={item}>
+                {item}
+              </ComboboxItem>
+            )}
+          </ComboboxList>
+        </ComboboxContent>
+      </Combobox>
 
       {hasActiveFilters && (
         <Button variant="ghost" onClick={() => onChange(DEFAULT_CONSULTANT_FILTERS)}>
