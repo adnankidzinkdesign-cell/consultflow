@@ -1,26 +1,41 @@
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import type {
   ChecklistStatus,
   ConsultantStatus,
   ConsultantTier,
 } from "@/lib/supabase/types";
 
+/** Small colored circle inside a status-ish badge, per brand styling. */
+function StatusDot({ className }: { className: string }) {
+  return (
+    <span
+      data-icon="inline-start"
+      aria-hidden="true"
+      className={cn("size-1.5 shrink-0 rounded-full", className)}
+    />
+  );
+}
+
 const CONSULTANT_STATUS_CONFIG: Record<
   ConsultantStatus,
-  { label: string; className: string }
+  { label: string; className: string; dotClassName: string }
 > = {
   pending_review: {
     label: "Pending review",
     className: "bg-[color:var(--color-amber-soft)] text-[color:var(--color-amber-ink)]",
+    dotClassName: "bg-[color:var(--color-amber)]",
   },
   approved: {
     label: "Approved",
     className: "bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-400",
+    dotClassName: "bg-green-500",
   },
-  rejected: { label: "Rejected", className: "" },
+  rejected: { label: "Rejected", className: "", dotClassName: "bg-destructive" },
   suspended: {
     label: "Suspended",
     className: "bg-muted text-muted-foreground",
+    dotClassName: "bg-muted-foreground",
   },
 };
 
@@ -37,7 +52,18 @@ export function ConsultantStatusBadge({ status }: { status: ConsultantStatus }) 
   const config = CONSULTANT_STATUS_CONFIG[status];
   return (
     <Badge variant={status === "rejected" ? "destructive" : "outline"} className={config.className}>
+      <StatusDot className={config.dotClassName} />
       {config.label}
+    </Badge>
+  );
+}
+
+/** Ad-hoc across the app (a boolean derived from reviews, not a persisted status) — kept as one shared component so the dot styling stays consistent. */
+export function BlacklistedBadge() {
+  return (
+    <Badge variant="destructive">
+      <StatusDot className="bg-destructive" />
+      Blacklisted
     </Badge>
   );
 }

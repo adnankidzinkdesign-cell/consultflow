@@ -5,8 +5,11 @@ import { createClient } from "@/lib/supabase/server";
 import { getSessionProfile } from "@/lib/auth/getSessionProfile";
 import { getConsultantProjectNames } from "@/lib/queries/consultant-projects";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ConsultantStatusBadge, TierBadge } from "@/components/consultflow/status-badges";
+import {
+  ConsultantStatusBadge,
+  TierBadge,
+  BlacklistedBadge,
+} from "@/components/consultflow/status-badges";
 import { ConsultantQuickEdit } from "@/components/consultflow/consultant-quick-edit";
 import { DisciplineBadgeList } from "@/components/consultflow/discipline-badge";
 import { ConsultantContactCard } from "@/components/consultflow/consultant-contact-card";
@@ -83,7 +86,7 @@ export default async function ConsultantDetailPage({
                 <TierBadge tier={consultant.tier} />
               </>
             )}
-            {isBlacklisted && <Badge variant="destructive">Blacklisted</Badge>}
+            {isBlacklisted && <BlacklistedBadge />}
           </div>
 
           {profile?.role === "admin" && (

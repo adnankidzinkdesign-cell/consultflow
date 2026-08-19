@@ -1,6 +1,6 @@
 import { StarRatingDisplay } from "@/components/consultflow/star-rating-display";
 import { DisciplineBadge } from "@/components/consultflow/discipline-badge";
-import { Badge } from "@/components/ui/badge";
+import { BlacklistedBadge } from "@/components/consultflow/status-badges";
 import { FEEDBACK_CATEGORIES, type Database } from "@/lib/supabase/types";
 
 type FeedbackReview = Database["public"]["Tables"]["feedback_reviews"]["Row"];
@@ -44,7 +44,7 @@ export function ReviewList({
                 </div>
               )}
             </div>
-            {review.blacklist && <Badge variant="destructive">Blacklisted</Badge>}
+            {review.blacklist && <BlacklistedBadge />}
           </div>
 
           <div className="grid grid-cols-1 gap-x-8 gap-y-1.5 sm:grid-cols-2">
