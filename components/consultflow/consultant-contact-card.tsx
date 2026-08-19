@@ -27,7 +27,7 @@ export function ConsultantContactCard({
         {contact_email && (
           <a
             href={`mailto:${contact_email}`}
-            className="flex items-center gap-2 text-primary hover:underline"
+            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
           >
             <MailIcon className="size-4 shrink-0" />
             {contact_email}
