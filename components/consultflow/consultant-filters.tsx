@@ -114,7 +114,7 @@ export function ConsultantFilters({
         >
           <ComboboxInput
             id="discipline"
-            placeholder="Any discipline"
+            placeholder="Discipline"
             showClear
             className="w-48"
           />
@@ -141,7 +141,7 @@ export function ConsultantFilters({
           onValueChange={(next) => set("region", next ?? "all")}
           autoHighlight
         >
-          <ComboboxInput id="region" placeholder="Any region" showClear className="w-40" />
+          <ComboboxInput id="region" placeholder="Region" showClear className="w-40" />
           <ComboboxContent>
             <ComboboxEmpty>No matches</ComboboxEmpty>
             <ComboboxList>
@@ -165,7 +165,7 @@ export function ConsultantFilters({
           onValueChange={(next) => set("project", next ?? "all")}
           autoHighlight
         >
-          <ComboboxInput id="project" placeholder="Any project" showClear className="w-40" />
+          <ComboboxInput id="project" placeholder="Project" showClear className="w-40" />
           <ComboboxContent>
             <ComboboxEmpty>No matches</ComboboxEmpty>
             <ComboboxList>
@@ -185,14 +185,14 @@ export function ConsultantFilters({
         </label>
         <Select value={value.status} onValueChange={(next) => set("status", next ?? "all")}>
           <SelectTrigger id="status" className="w-44">
-            <SelectValue placeholder="All statuses">
+            <SelectValue placeholder="Status">
               {(v: string) =>
-                v === "all" ? "All statuses" : STATUS_LABELS[v as ConsultantStatus]
+                v === "all" ? "Status" : STATUS_LABELS[v as ConsultantStatus]
               }
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All statuses</SelectItem>
+            <SelectItem value="all">Status</SelectItem>
             {STATUS_OPTIONS.map((opt) => (
               <SelectItem key={opt.value} value={opt.value}>
                 {opt.label}
