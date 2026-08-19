@@ -105,50 +105,40 @@
  */
 :root {
   /*
+   * Renamed from --color-accent (2026-08-19): that name collided with
+   * Tailwind/shadcn's own generic "accent" semantic slot (--color-accent:
+   * var(--accent) in the @theme block above, used for dropdown/select/
+   * combobox hover highlighting) — since both set the same CSS custom
+   * property, this block's declaration (later in the file) was silently
+   * winning, so every highlighted dropdown/select/combobox item rendered
+   * with a brand-red hover background instead of the intended neutral gray.
+   *
    * #e43e2f is the exact "Brand/600" value from the KidzInk design-system
    * foundation (Kidzink_Digital-Transformations Figma file, Foundation →
    * Colors) — the official Kidzink Red. Was #e43c2f, one hex digit off.
    */
-  --color-accent: #e43e2f;
-  --color-accent-hover: #b92d22;
-  --color-accent-soft: rgba(228, 62, 47, 0.1);
-  --color-accent-edge: rgba(228, 62, 47, 0.28);
+  --brand-red: #e43e2f;
+  --brand-red-hover: #b92d22;
+  --brand-red-soft: rgba(228, 62, 47, 0.1);
+  --brand-red-edge: rgba(228, 62, 47, 0.28);
   --color-on-accent: #ffffff;
 
+  /*
+   * Amber stays a plain color (not the Figma "Color Styles" ramp) — it's
+   * tied to fixed status/rating meaning (Pending review, star ratings),
+   * which per the color-reconciliation pass keeps its own semantic color
+   * rather than being drawn from the categorical Color Styles palette
+   * (unlike Tier/discipline badges, which now use plain Tailwind classes —
+   * see status-badges.tsx / discipline-badge.tsx).
+   */
   --color-amber: #e0a340;
   --color-amber-soft: #faeeda;
   --color-amber-ink: #854f0b;
+  /* Purple/pink kept bare (no -soft/-ink) — only the chart tokens below
+     still reference them now that Tier/discipline badges use literal
+     Tailwind classes instead. */
   --color-purple: #a98bd0;
-  --color-purple-soft: #edeaf6;
-  --color-purple-ink: #5b4a8f;
   --color-pink: #e38dac;
-  --color-pink-soft: #fbeaf0;
-  --color-pink-ink: #99375a;
-
-  /*
-   * Additional badge hues, from the KidzInk design-system foundation
-   * (Kidzink_Digital-Transformations Figma file, Foundation → Colors).
-   * Used to color-code free-text discipline tags — see
-   * components/consultflow/discipline-badge.tsx.
-   */
-  --color-red: #ef4444;
-  --color-red-soft: #fee2e2;
-  --color-red-ink: #991b1b;
-  --color-orange: #f97316;
-  --color-orange-soft: #ffedd5;
-  --color-orange-ink: #9a3412;
-  --color-green: #22c55e;
-  --color-green-soft: #dcfce7;
-  --color-green-ink: #166534;
-  --color-sky: #0ea5e9;
-  --color-sky-soft: #e0f2fe;
-  --color-sky-ink: #075985;
-  --color-blue: #3b82f6;
-  --color-blue-soft: #dbeafe;
-  --color-blue-ink: #1e40af;
-  --color-rose: #f43f5e;
-  --color-rose-soft: #ffe4e6;
-  --color-rose-ink: #9f1239;
 
   --background: #f5f3ef;
   --foreground: #18181b;
@@ -156,7 +146,7 @@
   --card-foreground: #18181b;
   --popover: #ffffff;
   --popover-foreground: #18181b;
-  --primary: var(--color-accent);
+  --primary: var(--brand-red);
   --primary-foreground: var(--color-on-accent);
   --secondary: #ede9e3;
   --secondary-foreground: #18181b;
@@ -169,8 +159,8 @@
   /* Neutral/300 (#d4d4d4) from the Figma Input component spec — was
      #e5dfd5, borrowed from --border rather than its own value. */
   --input: #d4d4d4;
-  --ring: var(--color-accent-edge);
-  --chart-1: var(--color-accent);
+  --ring: var(--brand-red-edge);
+  --chart-1: var(--brand-red);
   --chart-2: var(--color-amber);
   --chart-3: var(--color-purple);
   --chart-4: var(--color-pink);
@@ -178,30 +168,26 @@
   --radius: 0.625rem;
   --sidebar: #ffffff;
   --sidebar-foreground: #18181b;
-  --sidebar-primary: var(--color-accent);
+  --sidebar-primary: var(--brand-red);
   --sidebar-primary-foreground: var(--color-on-accent);
   --sidebar-accent: #ede9e3;
   --sidebar-accent-foreground: #18181b;
   --sidebar-border: #e5dfd5;
-  --sidebar-ring: var(--color-accent-edge);
+  --sidebar-ring: var(--brand-red-edge);
 }
 
 .dark {
-  --color-accent: #ff5244;
-  --color-accent-hover: #ff6b5a;
-  --color-accent-soft: rgba(255, 82, 68, 0.14);
-  --color-accent-edge: rgba(255, 82, 68, 0.32);
+  --brand-red: #ff5244;
+  --brand-red-hover: #ff6b5a;
+  --brand-red-soft: rgba(255, 82, 68, 0.14);
+  --brand-red-edge: rgba(255, 82, 68, 0.32);
   --color-on-accent: #ffffff;
 
   --color-amber: #e9b45c;
   --color-amber-soft: rgba(224, 163, 64, 0.2);
   --color-amber-ink: #f0c98a;
   --color-purple: #c6a9e0;
-  --color-purple-soft: rgba(198, 169, 217, 0.2);
-  --color-purple-ink: #d7c2ee;
   --color-pink: #eea8c0;
-  --color-pink-soft: rgba(235, 166, 188, 0.2);
-  --color-pink-ink: #f2bcd0;
 
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -209,7 +195,7 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: var(--color-accent);
+  --primary: var(--brand-red);
   --primary-foreground: var(--color-on-accent);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
@@ -220,20 +206,20 @@
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: var(--color-accent-edge);
-  --chart-1: var(--color-accent);
+  --ring: var(--brand-red-edge);
+  --chart-1: var(--brand-red);
   --chart-2: var(--color-amber);
   --chart-3: var(--color-purple);
   --chart-4: var(--color-pink);
   --chart-5: oklch(0.556 0 0);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: var(--color-accent);
+  --sidebar-primary: var(--brand-red);
   --sidebar-primary-foreground: var(--color-on-accent);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: var(--color-accent-edge);
+  --sidebar-ring: var(--brand-red-edge);
 }
 
 @layer base {

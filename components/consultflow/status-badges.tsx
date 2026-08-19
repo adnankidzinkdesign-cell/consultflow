@@ -68,18 +68,21 @@ export function BlacklistedBadge() {
   );
 }
 
+// Tier is a categorical ranking, not a status meaning — like disciplines,
+// its colors come straight from the Foundation → Colors ramps (plain
+// Tailwind classes) rather than a fixed semantic choice.
 const TIER_CONFIG: Record<ConsultantTier, { label: string; className: string }> = {
   tier_1: {
     label: "Tier 1",
-    className: "bg-[color:var(--color-purple-soft)] text-[color:var(--color-purple-ink)]",
+    className: "bg-purple-100 text-purple-800 dark:bg-purple-500/15 dark:text-purple-400",
   },
   tier_2: {
     label: "Tier 2",
-    className: "bg-[color:var(--color-amber-soft)] text-[color:var(--color-amber-ink)]",
+    className: "bg-yellow-100 text-yellow-800 dark:bg-yellow-500/15 dark:text-yellow-400",
   },
   tier_3: {
     label: "Tier 3",
-    className: "bg-[color:var(--color-pink-soft)] text-[color:var(--color-pink-ink)]",
+    className: "bg-pink-100 text-pink-800 dark:bg-pink-500/15 dark:text-pink-400",
   },
   unrated: { label: "Unrated", className: "bg-muted text-muted-foreground" },
 };
