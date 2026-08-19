@@ -131,9 +131,9 @@
    * (unlike Tier/discipline badges, which now use plain Tailwind classes —
    * see status-badges.tsx / discipline-badge.tsx).
    */
-  --color-amber: #e0a340;
-  --color-amber-soft: #faeeda;
-  --color-amber-ink: #854f0b;
+  --color-amber: #eab308;
+  --color-amber-soft: #fefce8;
+  --color-amber-ink: #a16207;
   /* Purple/pink kept bare (no -soft/-ink) — only the chart tokens below
      still reference them now that Tier/discipline badges use literal
      Tailwind classes instead. */

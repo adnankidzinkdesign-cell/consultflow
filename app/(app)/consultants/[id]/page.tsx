@@ -59,7 +59,7 @@ export default async function ConsultantDetailPage({
     reviews && reviews.length > 0
       ? FEEDBACK_CATEGORIES.reduce<Record<FeedbackCategoryKey, number>>((acc, { key }) => {
           const total = reviews.reduce((sum, r) => sum + r[key], 0);
-          acc[key] = Math.round(total / reviews.length);
+          acc[key] = total / reviews.length;
           return acc;
         }, {} as Record<FeedbackCategoryKey, number>)
       : null;

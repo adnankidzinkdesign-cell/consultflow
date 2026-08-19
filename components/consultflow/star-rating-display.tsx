@@ -1,10 +1,11 @@
-import { StarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { FractionalStar } from "@/components/consultflow/star-icon";
 
 export function StarRatingDisplay({
   value,
   label,
 }: {
+  /** 0-5, may be fractional (e.g. an average across reviews) — each star
+   * fills proportionally rather than rounding to the nearest whole star. */
   value: number;
   label?: string;
 }) {
@@ -13,13 +14,7 @@ export function StarRatingDisplay({
       {label && <span className="text-sm text-muted-foreground">{label}</span>}
       <div className="flex items-center gap-0.5" aria-label={`${value} out of 5 stars`}>
         {[1, 2, 3, 4, 5].map((n) => (
-          <StarIcon
-            key={n}
-            className={cn(
-              "size-4 fill-current",
-              n <= value ? "text-[color:var(--color-amber)]" : "text-muted"
-            )}
-          />
+          <FractionalStar key={n} fill={value - (n - 1)} className="size-4" />
         ))}
       </div>
     </div>

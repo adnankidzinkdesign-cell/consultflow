@@ -28,13 +28,13 @@ const CONSULTANT_STATUS_CONFIG: Record<
   },
   approved: {
     label: "Approved",
-    className: "bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-400",
+    className: "bg-green-50 text-green-700 dark:bg-green-500/15 dark:text-green-400",
     dotClassName: "bg-green-500",
   },
   rejected: { label: "Rejected", className: "", dotClassName: "bg-destructive" },
   suspended: {
     label: "Suspended",
-    className: "bg-neutral-200 text-neutral-700 dark:bg-neutral-500/15 dark:text-neutral-400",
+    className: "bg-neutral-50 text-neutral-700 dark:bg-neutral-500/15 dark:text-neutral-400",
     dotClassName: "bg-neutral-500",
   },
 };

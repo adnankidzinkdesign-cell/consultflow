@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { StarIcon } from "lucide-react";
+import { StarIcon } from "@/components/consultflow/star-icon";
 
 /**
  * A 1-5 star rating input built from plain radio buttons, laid out
@@ -34,9 +34,9 @@ export function StarRatingField({
             />
             <label
               htmlFor={`${name}-${value}`}
-              className="cursor-pointer text-muted-foreground transition-colors peer-checked:text-[color:var(--color-amber)] hover:text-[color:var(--color-amber-ink)]"
+              className="cursor-pointer text-neutral-200 transition-colors peer-checked:text-yellow-400 hover:text-yellow-500 dark:text-neutral-700"
             >
-              <StarIcon className="size-6 fill-current" />
+              <StarIcon className="size-6" />
               <span className="sr-only">{value} star{value === 1 ? "" : "s"}</span>
             </label>
           </Fragment>
