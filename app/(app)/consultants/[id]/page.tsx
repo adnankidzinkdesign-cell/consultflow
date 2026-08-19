@@ -142,6 +142,8 @@ export default async function ConsultantDetailPage({
         </div>
       </div>
 
+      <hr className="border-border" />
+
       <section className="space-y-4">
         {averages && (
           <div className="space-y-1.5">
