@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +13,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { TagInput } from "@/components/consultflow/tag-input";
+import { disciplineBadgeClassName } from "@/components/consultflow/discipline-badge";
+import {
+  CONSULTANT_STATUS_OPTIONS,
+  CONSULTANT_TIER_OPTIONS,
+} from "@/components/consultflow/status-badges";
 import type {
   ConsultantStatus,
   ConsultantTier,
@@ -22,19 +28,8 @@ import type { ConsultantFormState } from "@/lib/actions/consultants";
 
 type Consultant = Database["public"]["Tables"]["consultants"]["Row"];
 
-const STATUS_OPTIONS: { value: ConsultantStatus; label: string }[] = [
-  { value: "pending_review", label: "Pending review" },
-  { value: "approved", label: "Approved" },
-  { value: "rejected", label: "Rejected" },
-  { value: "suspended", label: "Suspended" },
-];
-
-const TIER_OPTIONS: { value: ConsultantTier; label: string }[] = [
-  { value: "unrated", label: "Unrated" },
-  { value: "tier_1", label: "Tier 1" },
-  { value: "tier_2", label: "Tier 2" },
-  { value: "tier_3", label: "Tier 3" },
-];
+const STATUS_OPTIONS = CONSULTANT_STATUS_OPTIONS;
+const TIER_OPTIONS = CONSULTANT_TIER_OPTIONS;
 
 // Base UI's Select.Value shows the raw value by default — unlike Radix, it
 // doesn't automatically display the matched SelectItem's label — so the
@@ -50,6 +45,8 @@ export function ConsultantForm({
   action,
   consultant,
   projectNames,
+  disciplineSuggestions = [],
+  regionSuggestions = [],
   submitLabel,
 }: {
   action: (
@@ -61,9 +58,14 @@ export function ConsultantForm({
    * they live in the consultant_projects join table, not on the consultant
    * row itself. */
   projectNames?: string[];
+  /** Discipline/region values already used by other consultants, for the tag inputs' typeahead. */
+  disciplineSuggestions?: string[];
+  regionSuggestions?: string[];
   submitLabel: string;
 }) {
   const [state, formAction, pending] = useActionState(action, { error: null });
+  const [disciplines, setDisciplines] = useState<string[]>(consultant?.disciplines ?? []);
+  const [regions, setRegions] = useState<string[]>(consultant?.regions ?? []);
 
   return (
     <form action={formAction} className="max-w-xl space-y-5">
@@ -117,13 +119,18 @@ export function ConsultantForm({
 
       <div className="space-y-1.5">
         <Label htmlFor="disciplines">Disciplines *</Label>
-        <Input
+        <TagInput
           id="disciplines"
           name="disciplines"
-          required
-          placeholder="Comma-separated, e.g. Structural Engineering, MEP"
-          defaultValue={consultant?.disciplines.join(", ")}
+          value={disciplines}
+          onChange={setDisciplines}
+          suggestions={disciplineSuggestions}
+          placeholder="Type a discipline and press Enter or comma…"
+          chipClassName={disciplineBadgeClassName}
         />
+        {disciplines.length === 0 && (
+          <p className="text-xs text-destructive">At least one discipline is required.</p>
+        )}
         <p className="text-xs text-muted-foreground">
           One consultant can offer multiple disciplines/services — list them all here
           instead of adding the company more than once.
@@ -146,11 +153,13 @@ export function ConsultantForm({
 
       <div className="space-y-1.5">
         <Label htmlFor="regions">Regions</Label>
-        <Input
+        <TagInput
           id="regions"
           name="regions"
-          placeholder="Comma-separated, e.g. UAE, KSA, Qatar"
-          defaultValue={consultant?.regions.join(", ")}
+          value={regions}
+          onChange={setRegions}
+          suggestions={regionSuggestions}
+          placeholder="Type a region and press Enter or comma…"
         />
       </div>
 

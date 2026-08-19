@@ -24,6 +24,15 @@ const CONSULTANT_STATUS_CONFIG: Record<
   },
 };
 
+/**
+ * Shared source for the Status <Select> options wherever status is
+ * editable (the full edit form, and the inline quick-edit on the detail
+ * page) — order and labels stay in sync with the badge above by construction.
+ */
+export const CONSULTANT_STATUS_OPTIONS: { value: ConsultantStatus; label: string }[] = (
+  Object.keys(CONSULTANT_STATUS_CONFIG) as ConsultantStatus[]
+).map((value) => ({ value, label: CONSULTANT_STATUS_CONFIG[value].label }));
+
 export function ConsultantStatusBadge({ status }: { status: ConsultantStatus }) {
   const config = CONSULTANT_STATUS_CONFIG[status];
   return (
@@ -48,6 +57,22 @@ const TIER_CONFIG: Record<ConsultantTier, { label: string; className: string }> 
   },
   unrated: { label: "Unrated", className: "bg-muted text-muted-foreground" },
 };
+
+/**
+ * Shared source for the Tier <Select> options (see CONSULTANT_STATUS_OPTIONS
+ * above). Explicit order rather than derived from TIER_CONFIG's key order —
+ * "Unrated" comes first here to match the existing edit form, whereas the
+ * config above is ordered tier_1..tier_3, unrated.
+ */
+export const CONSULTANT_TIER_OPTIONS: { value: ConsultantTier; label: string }[] = [
+  "unrated",
+  "tier_1",
+  "tier_2",
+  "tier_3",
+].map((value) => ({
+  value: value as ConsultantTier,
+  label: TIER_CONFIG[value as ConsultantTier].label,
+}));
 
 export function TierBadge({ tier }: { tier: ConsultantTier }) {
   const config = TIER_CONFIG[tier];
