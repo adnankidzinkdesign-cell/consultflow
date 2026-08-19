@@ -3,6 +3,7 @@ import Link from "next/link";
 import { signOut } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/consultflow/theme-toggle";
+import { UserAvatar } from "@/components/consultflow/user-avatar";
 import type { SessionProfile } from "@/lib/auth/getSessionProfile";
 
 const ROLE_LABELS: Record<SessionProfile["role"], string> = {
@@ -26,13 +27,16 @@ export function AppHeader({ profile }: { profile: SessionProfile }) {
         </Link>
 
         <div className="flex items-center gap-4">
-          <div className="text-right text-sm leading-tight">
-            <p className="font-medium text-foreground">
-              {profile.fullName ?? profile.email}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {ROLE_LABELS[profile.role]}
-            </p>
+          <div className="flex items-center gap-3">
+            <UserAvatar name={profile.fullName ?? profile.email} />
+            <div className="text-sm leading-tight">
+              <p className="font-medium text-foreground">
+                {profile.fullName ?? profile.email}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {ROLE_LABELS[profile.role]}
+              </p>
+            </div>
           </div>
           <form action={signOut}>
             <Button type="submit" variant="outline" size="sm">

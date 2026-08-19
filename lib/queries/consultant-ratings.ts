@@ -36,3 +36,21 @@ export async function getConsultantRatings(
   }
   return result;
 }
+
+/**
+ * Consultant ids with at least one review flagged `blacklist` — mirrors the
+ * per-consultant `isBlacklisted` check on the detail page, but for every
+ * consultant at once (for the "Blacklisted" metric card on the list page).
+ * Blacklisting is a per-review flag, not a persisted consultant column —
+ * see the comment on ConsultantDetailPage.
+ */
+export async function getBlacklistedConsultantIds(
+  supabase: Awaited<ReturnType<typeof createClient>>
+): Promise<Set<string>> {
+  const { data } = await supabase
+    .from("feedback_reviews")
+    .select("consultant_id")
+    .eq("blacklist", true);
+
+  return new Set((data ?? []).map((r) => r.consultant_id));
+}
