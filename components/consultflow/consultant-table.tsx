@@ -52,7 +52,7 @@ export function ConsultantTable({
         </TableHeader>
         <TableBody>
           {consultants.map((c) => (
-            <TableRow key={c.id} className="cursor-pointer">
+            <TableRow key={c.id} className="cursor-pointer even:bg-muted/30">
               <TableCell className="font-medium">
                 <Link href={`/consultants/${c.id}`} className="block">
                   {c.company_name}

@@ -1,7 +1,8 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
+import { SearchIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import {
   Select,
   SelectContent,
@@ -88,13 +89,17 @@ export function ConsultantFilters({
         <label htmlFor="q" className="text-xs font-medium text-muted-foreground">
           Search
         </label>
-        <Input
-          id="q"
-          placeholder="Company or contact name"
-          value={value.q}
-          onChange={(e) => set("q", e.target.value)}
-          className="w-56"
-        />
+        <InputGroup className="w-56">
+          <InputGroupAddon>
+            <SearchIcon />
+          </InputGroupAddon>
+          <InputGroupInput
+            id="q"
+            placeholder="Search consultants…"
+            value={value.q}
+            onChange={(e) => set("q", e.target.value)}
+          />
+        </InputGroup>
       </div>
 
       <div className="flex flex-col gap-1.5">
