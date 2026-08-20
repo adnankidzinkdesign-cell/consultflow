@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { Loader2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Input, Button, StarRatingField } from "@kidzink/ui";
+import { Input, Button, Checkbox, StarRatingField } from "@kidzink/ui";
 import {
   Combobox,
   ComboboxChips,
@@ -124,7 +124,7 @@ export function FeedbackReviewForm({
       </div>
 
       <label className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
-        <input type="checkbox" name="blacklist" className="mt-0.5 size-4" />
+        <Checkbox name="blacklist" size="sm" className="mt-0.5" />
         <span>
           <span className="font-medium text-foreground">Blacklist this consultant</span>
           <span className="block text-muted-foreground">
