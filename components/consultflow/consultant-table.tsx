@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FractionalStar } from "@kidzink/ui";
+import { FractionalStar, TableCellText } from "@kidzink/ui";
 import {
   Table,
   TableBody,
@@ -55,12 +55,14 @@ export function ConsultantTable({
             <TableRow key={c.id} className="cursor-pointer even:bg-muted/30">
               <TableCell className="font-medium">
                 <Link href={`/consultants/${c.id}`} className="block">
-                  {c.company_name}
-                  {c.contact_name && (
-                    <span className="block text-xs font-normal text-muted-foreground">
-                      {c.contact_name}
-                    </span>
-                  )}
+                  {/* nth-child(2) only matches the optional supporting line
+                      (contact_name), so a company with no contact_name keeps
+                      its normal single-line size/weight. */}
+                  <TableCellText
+                    primary={c.company_name}
+                    supporting={c.contact_name}
+                    className="[&>span:nth-child(2)]:text-xs [&>span:nth-child(2)]:font-normal"
+                  />
                 </Link>
               </TableCell>
               <TableCell>
