@@ -24,6 +24,7 @@ import type { FeedbackFormState } from "@/lib/actions/feedback";
 export function FeedbackReviewForm({
   action,
   disciplineOptions,
+  regionOptions,
 }: {
   action: (
     state: FeedbackFormState,
@@ -31,9 +32,12 @@ export function FeedbackReviewForm({
   ) => Promise<FeedbackFormState>;
   /** The consultant's own disciplines — the review can only cover a subset of these. */
   disciplineOptions: string[];
+  /** The consultant's own regions — may be empty, unlike disciplineOptions. */
+  regionOptions: string[];
 }) {
   const [state, formAction, pending] = useActionState(action, { error: null });
-  const chipsAnchor = useComboboxAnchor();
+  const disciplineChipsAnchor = useComboboxAnchor();
+  const regionChipsAnchor = useComboboxAnchor();
 
   return (
     <form action={formAction} className="max-w-xl space-y-6">
@@ -54,7 +58,7 @@ export function FeedbackReviewForm({
       <div className="space-y-1.5">
         <Label htmlFor="disciplines">Discipline(s) covered by this review</Label>
         <Combobox items={disciplineOptions} name="disciplines" multiple autoHighlight>
-          <ComboboxChips ref={chipsAnchor}>
+          <ComboboxChips ref={disciplineChipsAnchor}>
             <ComboboxValue>
               {(selected: string[]) =>
                 selected.map((item) => (
@@ -67,7 +71,36 @@ export function FeedbackReviewForm({
               placeholder={disciplineOptions.length ? "Select discipline(s)" : "No disciplines on file"}
             />
           </ComboboxChips>
-          <ComboboxContent anchor={chipsAnchor}>
+          <ComboboxContent anchor={disciplineChipsAnchor}>
+            <ComboboxEmpty>No matches</ComboboxEmpty>
+            <ComboboxList>
+              {(item: string) => (
+                <ComboboxItem key={item} value={item}>
+                  {item}
+                </ComboboxItem>
+              )}
+            </ComboboxList>
+          </ComboboxContent>
+        </Combobox>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="regions">Region(s) covered by this review</Label>
+        <Combobox items={regionOptions} name="regions" multiple autoHighlight>
+          <ComboboxChips ref={regionChipsAnchor}>
+            <ComboboxValue>
+              {(selected: string[]) =>
+                selected.map((item) => (
+                  <ComboboxChip key={item}>{item}</ComboboxChip>
+                ))
+              }
+            </ComboboxValue>
+            <ComboboxChipsInput
+              id="regions"
+              placeholder={regionOptions.length ? "Select region(s)" : "No regions on file"}
+            />
+          </ComboboxChips>
+          <ComboboxContent anchor={regionChipsAnchor}>
             <ComboboxEmpty>No matches</ComboboxEmpty>
             <ComboboxList>
               {(item: string) => (

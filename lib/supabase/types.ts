@@ -133,6 +133,7 @@ export interface Database {
           commercial_value: number;
           blacklist: boolean;
           disciplines: string[];
+          regions: string[];
           comments: string | null;
           created_at: string;
           updated_at: string;

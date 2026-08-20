@@ -30,6 +30,11 @@ export async function createFeedbackReview(
     return { error: "Select at least one discipline this review covers." };
   }
 
+  // Unlike disciplines, not required — a consultant may have no regions on
+  // file at all, so a review of them naturally can't tag any (see migration
+  // 0008_feedback_review_regions.sql).
+  const regions = formData.getAll("regions").map((v) => String(v).trim()).filter(Boolean);
+
   const ratings: Record<string, number> = {};
   for (const { key, label } of FEEDBACK_CATEGORIES) {
     const raw = formData.get(key);
@@ -46,6 +51,7 @@ export async function createFeedbackReview(
     reviewer_id: profile.userId,
     project_name: (formData.get("project_name") as string)?.trim() || null,
     disciplines,
+    regions,
     technical_competence: ratings.technical_competence,
     quality_of_deliverables: ratings.quality_of_deliverables,
     programme_reliability: ratings.programme_reliability,

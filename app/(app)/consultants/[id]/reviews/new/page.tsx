@@ -14,7 +14,7 @@ export default async function NewReviewPage({
   const supabase = await createClient();
   const { data: consultant } = await supabase
     .from("consultants")
-    .select("id, company_name, disciplines")
+    .select("id, company_name, disciplines, regions")
     .eq("id", id)
     .single();
 
@@ -41,6 +41,7 @@ export default async function NewReviewPage({
       <FeedbackReviewForm
         action={createFeedbackReview.bind(null, id)}
         disciplineOptions={consultant.disciplines}
+        regionOptions={consultant.regions}
       />
     </div>
   );

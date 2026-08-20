@@ -43,6 +43,11 @@ export function ReviewList({
                   ))}
                 </div>
               )}
+              {review.regions.length > 0 && (
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {review.regions.join(", ")}
+                </p>
+              )}
             </div>
             {review.blacklist && <BlacklistedBadge />}
           </div>
