@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ConsultantStatusBadge, TierBadge } from "@/components/consultflow/status-badges";
+import { ConsultantStatusBadge } from "@/components/consultflow/status-badges";
 import { DisciplineBadge, DisciplineBadgeList } from "@/components/consultflow/discipline-badge";
 import type { Database } from "@/lib/supabase/types";
 import type { ConsultantRatingSummary } from "@/lib/queries/consultant-ratings";
@@ -46,7 +46,6 @@ export function ConsultantTable({
             <TableHead>Disciplines</TableHead>
             <TableHead>Regions</TableHead>
             <TableHead>Rating</TableHead>
-            <TableHead>Tier</TableHead>
             <TableHead>Status</TableHead>
           </TableRow>
         </TableHeader>
@@ -103,11 +102,6 @@ export function ConsultantTable({
                   ) : (
                     <span className="text-muted-foreground">—</span>
                   )}
-                </Link>
-              </TableCell>
-              <TableCell>
-                <Link href={`/consultants/${c.id}`} className="block">
-                  <TierBadge tier={c.tier} />
                 </Link>
               </TableCell>
               <TableCell>
