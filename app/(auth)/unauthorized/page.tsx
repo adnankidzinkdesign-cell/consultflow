@@ -1,5 +1,5 @@
 import { signOut } from "@/lib/actions/auth";
-import { Button } from "@/components/ui/button";
+import { Button } from "@kidzink/ui";
 
 export default function UnauthorizedPage() {
   return (

@@ -2,17 +2,17 @@
 
 import { useActionState, useState } from "react";
 import { Loader2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import {
+  Input,
+  Button,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@kidzink/ui";
 import { TagInput } from "@/components/consultflow/tag-input";
 import { disciplineBadgeClassName } from "@/components/consultflow/discipline-badge";
 import {

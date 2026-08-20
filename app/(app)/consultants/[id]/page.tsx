@@ -4,7 +4,7 @@ import { ArrowLeftIcon } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getSessionProfile } from "@/lib/auth/getSessionProfile";
 import { getConsultantProjectNames } from "@/lib/queries/consultant-projects";
-import { Button } from "@/components/ui/button";
+import { Button } from "@kidzink/ui";
 import {
   ConsultantStatusBadge,
   TierBadge,

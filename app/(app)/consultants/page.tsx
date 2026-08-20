@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getSessionProfile } from "@/lib/auth/getSessionProfile";
-import { Button } from "@/components/ui/button";
+import { Button } from "@kidzink/ui";
 import { ConsultantsBrowser } from "@/components/consultflow/consultants-browser";
 import { ConsultantMetrics } from "@/components/consultflow/consultant-metrics";
 import { getAllConsultantProjectNames } from "@/lib/queries/consultant-projects";

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { signInWithAzure } from "@/lib/actions/auth";
 import { isEmailLoginEnabled } from "@/lib/auth/emailLoginEnabled";
-import { Button } from "@/components/ui/button";
+import { Button } from "@kidzink/ui";
 import { DevAuthForm } from "@/components/consultflow/dev-auth-form";
 import { ThemeToggle } from "@/components/consultflow/theme-toggle";
 

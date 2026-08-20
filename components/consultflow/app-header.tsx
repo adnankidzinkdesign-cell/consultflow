@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { signOut } from "@/lib/actions/auth";
-import { Button } from "@/components/ui/button";
+import { Button } from "@kidzink/ui";
 import { ThemeToggle } from "@/components/consultflow/theme-toggle";
 import { UserAvatar } from "@/components/consultflow/user-avatar";
 import type { SessionProfile } from "@/lib/auth/getSessionProfile";

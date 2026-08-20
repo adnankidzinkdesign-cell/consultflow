@@ -2,6 +2,11 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* Scan @kidzink/ui's compiled bundle for Tailwind class names — it ships as
+   source-of-truth utility classes but lives in node_modules, so it needs an
+   explicit @source or Tailwind v4 purges classes it never sees literally. */
+@source "../node_modules/@kidzink/ui/dist/**/*.{js,mjs}";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

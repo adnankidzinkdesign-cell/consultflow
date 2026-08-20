@@ -1,7 +1,7 @@
 "use client";
 
 import { SearchIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@kidzink/ui";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import {
   Combobox,

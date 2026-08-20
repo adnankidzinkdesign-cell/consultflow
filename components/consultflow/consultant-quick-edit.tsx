@@ -9,7 +9,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@kidzink/ui";
 import {
   CONSULTANT_STATUS_OPTIONS,
   CONSULTANT_TIER_OPTIONS,
