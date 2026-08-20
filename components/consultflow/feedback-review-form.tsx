@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { Loader2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Input, Button } from "@kidzink/ui";
+import { Input, Button, StarRatingField } from "@kidzink/ui";
 import {
   Combobox,
   ComboboxChips,
@@ -17,7 +17,6 @@ import {
   ComboboxValue,
   useComboboxAnchor,
 } from "@/components/ui/combobox";
-import { StarRatingField } from "@/components/consultflow/star-rating-field";
 import { FEEDBACK_CATEGORIES } from "@/lib/supabase/types";
 import type { FeedbackFormState } from "@/lib/actions/feedback";
 

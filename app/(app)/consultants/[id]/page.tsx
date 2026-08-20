@@ -4,7 +4,7 @@ import { ArrowLeftIcon } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getSessionProfile } from "@/lib/auth/getSessionProfile";
 import { getConsultantProjectNames } from "@/lib/queries/consultant-projects";
-import { Button } from "@kidzink/ui";
+import { Button, StarRatingDisplay } from "@kidzink/ui";
 import {
   ConsultantStatusBadge,
   TierBadge,
@@ -13,7 +13,6 @@ import {
 import { ConsultantQuickEdit } from "@/components/consultflow/consultant-quick-edit";
 import { DisciplineBadgeList } from "@/components/consultflow/discipline-badge";
 import { ConsultantContactCard } from "@/components/consultflow/consultant-contact-card";
-import { StarRatingDisplay } from "@/components/consultflow/star-rating-display";
 import { ReviewList } from "@/components/consultflow/review-list";
 import { FEEDBACK_CATEGORIES, type FeedbackCategoryKey } from "@/lib/supabase/types";
 

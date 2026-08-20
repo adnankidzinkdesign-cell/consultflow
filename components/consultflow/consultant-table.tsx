@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FractionalStar } from "@/components/consultflow/star-icon";
+import { FractionalStar } from "@kidzink/ui";
 import {
   Table,
   TableBody,

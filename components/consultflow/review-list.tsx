@@ -1,4 +1,4 @@
-import { StarRatingDisplay } from "@/components/consultflow/star-rating-display";
+import { StarRatingDisplay } from "@kidzink/ui";
 import { DisciplineBadge } from "@/components/consultflow/discipline-badge";
 import { BlacklistedBadge } from "@/components/consultflow/status-badges";
 import { FEEDBACK_CATEGORIES, type Database } from "@/lib/supabase/types";
