@@ -20,6 +20,14 @@ if (!token) {
   process.exit(0);
 }
 
-execSync(
-  `git config --global url."https://${token}@github.com/".insteadOf "https://github.com/"`
-);
+// Rewrite every URL form npm/git might resolve `github.com` refs to.
+// Plain "https://github.com/" is the one the package.json dependency spec
+// now uses explicitly (git+https://...), but npm's own git-arg resolution
+// for GitHub refs has been observed defaulting to SSH (`ssh://git@github.com/…`
+// — the actual cause of the very first Netlify failure here) even when the
+// spec doesn't ask for it, so both are rewritten defensively.
+for (const from of ["https://github.com/", "ssh://git@github.com/"]) {
+  execSync(
+    `git config --global url."https://${token}@github.com/".insteadOf "${from}"`
+  );
+}
