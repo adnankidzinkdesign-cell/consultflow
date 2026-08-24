@@ -58,7 +58,14 @@ export function ConsultantStatusBadge({ status }: { status: ConsultantStatus }) 
   );
 }
 
-/** Ad-hoc across the app (a boolean derived from reviews, not a persisted status) — kept as one shared component so the dot styling stays consistent. */
+/**
+ * Ad-hoc across the app (derived from reviews, not a persisted status) —
+ * kept as one shared component so the dot styling stays consistent.
+ * Blacklisting is scoped per-discipline (a review's `disciplines` field),
+ * not consultant-wide — callers pair this with their own "for: X, Y" text
+ * built from whichever reviews had `blacklist = true` (see the detail page
+ * and review-list for the two current call sites).
+ */
 export function BlacklistedBadge() {
   return (
     <Badge variant="destructive">

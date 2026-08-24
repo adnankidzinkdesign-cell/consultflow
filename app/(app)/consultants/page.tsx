@@ -8,6 +8,7 @@ import { getAllConsultantProjectNames } from "@/lib/queries/consultant-projects"
 import {
   getConsultantRatings,
   getBlacklistedConsultantIds,
+  getBlacklistedDisciplinesByConsultant,
 } from "@/lib/queries/consultant-ratings";
 
 /**
@@ -31,11 +32,13 @@ export default async function ConsultantsPage() {
     projectNamesByConsultant,
     ratingsByConsultant,
     blacklistedIds,
+    blacklistedDisciplinesByConsultant,
   ] = await Promise.all([
     supabase.from("consultants").select("*").order("company_name"),
     getAllConsultantProjectNames(supabase),
     getConsultantRatings(supabase),
     getBlacklistedConsultantIds(supabase),
+    getBlacklistedDisciplinesByConsultant(supabase),
   ]);
 
   const all = consultants ?? [];
@@ -65,6 +68,7 @@ export default async function ConsultantsPage() {
         consultants={all}
         projectNamesByConsultant={projectNamesByConsultant}
         ratingsByConsultant={ratingsByConsultant}
+        blacklistedDisciplinesByConsultant={blacklistedDisciplinesByConsultant}
       />
     </div>
   );

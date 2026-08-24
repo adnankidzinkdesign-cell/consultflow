@@ -52,7 +52,14 @@ export default async function ConsultantDetailPage({
     (reviewerProfiles ?? []).map((p) => [p.id, p.full_name ?? p.email])
   );
 
-  const isBlacklisted = (reviews ?? []).some((r) => r.blacklist);
+  // Blacklisting is scoped to the discipline(s) the blacklisting review
+  // covered, not the whole consultant — a consultant can be blacklisted for
+  // Structural Engineering while still eligible for MEP, say.
+  const blacklistedDisciplines = Array.from(
+    new Set(
+      (reviews ?? []).filter((r) => r.blacklist).flatMap((r) => r.disciplines)
+    )
+  ).sort();
 
   const averages =
     reviews && reviews.length > 0
@@ -81,8 +88,13 @@ export default async function ConsultantDetailPage({
             </h1>
             <ConsultantStatusBadge status={consultant.status} />
             {profile?.role !== "admin" && <TierBadge tier={consultant.tier} />}
-            {isBlacklisted && <BlacklistedBadge />}
+            {blacklistedDisciplines.length > 0 && <BlacklistedBadge />}
           </div>
+          {blacklistedDisciplines.length > 0 && (
+            <p className="text-xs text-muted-foreground">
+              Blacklisted for: {blacklistedDisciplines.join(", ")}
+            </p>
+          )}
 
           {profile?.role === "admin" && (
             <ConsultantQuickEdit

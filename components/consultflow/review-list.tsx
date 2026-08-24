@@ -49,7 +49,16 @@ export function ReviewList({
                 </p>
               )}
             </div>
-            {review.blacklist && <BlacklistedBadge />}
+            {review.blacklist && (
+              <div className="flex flex-col items-end gap-0.5">
+                <BlacklistedBadge />
+                {/* Blacklisting is scoped to this review's own disciplines —
+                    see the equivalent computation on the detail page. */}
+                <span className="text-xs text-muted-foreground">
+                  {review.disciplines.join(", ")}
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-1 gap-x-8 gap-y-1.5 sm:grid-cols-2">

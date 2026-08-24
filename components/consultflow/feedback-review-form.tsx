@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,6 +17,15 @@ import {
   ComboboxValue,
   useComboboxAnchor,
 } from "@/components/ui/combobox";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { FEEDBACK_CATEGORIES } from "@/lib/supabase/types";
 import type { FeedbackFormState } from "@/lib/actions/feedback";
 
@@ -37,6 +46,8 @@ export function FeedbackReviewForm({
   const [state, formAction, pending] = useActionState(action, { error: null });
   const disciplineChipsAnchor = useComboboxAnchor();
   const regionChipsAnchor = useComboboxAnchor();
+  const [blacklisted, setBlacklisted] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   return (
     <form action={formAction} className="max-w-xl space-y-6">
@@ -124,14 +135,60 @@ export function FeedbackReviewForm({
       </div>
 
       <label className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
-        <Checkbox name="blacklist" size="sm" className="mt-0.5" />
+        <Checkbox
+          name="blacklist"
+          size="sm"
+          className="mt-0.5"
+          checked={blacklisted}
+          onCheckedChange={(checked) => {
+            if (checked) {
+              // Don't flip the checkbox on yet — wait for confirmation below.
+              setConfirmOpen(true);
+            } else {
+              setBlacklisted(false);
+            }
+          }}
+        />
         <span>
-          <span className="font-medium text-foreground">Blacklist this consultant</span>
+          <span className="font-medium text-foreground">
+            Blacklist for the discipline(s) selected above
+          </span>
           <span className="block text-muted-foreground">
-            Flags them across ConsultFlow as not to be used on future projects.
+            Marks this consultant ineligible for future engagements in those
+            discipline(s) only — not company-wide.
           </span>
         </span>
       </label>
+
+      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Blacklist for these disciplines?</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to blacklist this consultant? Blacklisting
+              a consultant marks them as ineligible for future engagements in
+              the discipline(s) selected above — other disciplines they offer
+              are unaffected.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose render={<Button type="button" variant="outline" />}>
+              Cancel
+            </DialogClose>
+            <DialogClose
+              render={
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={() => setBlacklisted(true)}
+                />
+              }
+            >
+              Blacklist
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Button type="submit" disabled={pending}>
         {pending && <Loader2 className="h-4 w-4 animate-spin" />}

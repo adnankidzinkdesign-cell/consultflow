@@ -14,6 +14,12 @@ export interface FeedbackFormState {
  * Records a post-project feedback review for a consultant. Both admin and
  * project_lead may submit one (see migration 0003 for the RLS rationale);
  * `reviewer_id` is always the signed-in user, never client-supplied.
+ *
+ * `blacklist` is scoped to `disciplines` — it does not blacklist the
+ * consultant company-wide, only for the discipline(s) this review covers.
+ * Consumers derive "is this consultant blacklisted for discipline X" by
+ * checking every review's (blacklist, disciplines) pair rather than reading
+ * a single consultant-level flag (see the detail page and review-list).
  */
 export async function createFeedbackReview(
   consultantId: string,

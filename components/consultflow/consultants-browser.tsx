@@ -22,10 +22,13 @@ export function ConsultantsBrowser({
   consultants,
   projectNamesByConsultant,
   ratingsByConsultant,
+  blacklistedDisciplinesByConsultant,
 }: {
   consultants: Consultant[];
   projectNamesByConsultant: Record<string, string[]>;
   ratingsByConsultant: Record<string, ConsultantRatingSummary>;
+  /** Every consultant's blacklisted disciplines, keyed by consultant id — see getBlacklistedDisciplinesByConsultant. */
+  blacklistedDisciplinesByConsultant: Record<string, string[]>;
 }) {
   const [filters, setFilters] = useState<ConsultantFilterValues>(DEFAULT_CONSULTANT_FILTERS);
 
@@ -83,6 +86,7 @@ export function ConsultantsBrowser({
         consultants={filtered}
         activeDiscipline={filters.discipline !== "all" ? filters.discipline : undefined}
         ratings={ratingsByConsultant}
+        blacklistedDisciplinesByConsultant={blacklistedDisciplinesByConsultant}
       />
     </>
   );

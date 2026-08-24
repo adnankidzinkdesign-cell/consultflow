@@ -54,3 +54,31 @@ export async function getBlacklistedConsultantIds(
 
   return new Set((data ?? []).map((r) => r.consultant_id));
 }
+
+/**
+ * Every consultant's blacklisted disciplines, unioned across all of their
+ * blacklisting reviews (mirrors the per-consultant `blacklistedDisciplines`
+ * computation on the detail page, but for every consultant at once) — lets
+ * the consultants list warn when a discipline filter turns up a consultant
+ * blacklisted for that exact discipline. Blacklisting is scoped per-review
+ * via `disciplines`, not consultant-wide — see the comment on
+ * createFeedbackReview.
+ */
+export async function getBlacklistedDisciplinesByConsultant(
+  supabase: Awaited<ReturnType<typeof createClient>>
+): Promise<Record<string, string[]>> {
+  const { data } = await supabase
+    .from("feedback_reviews")
+    .select("consultant_id, disciplines")
+    .eq("blacklist", true);
+
+  const result: Record<string, Set<string>> = {};
+  for (const row of data ?? []) {
+    const set = (result[row.consultant_id] ??= new Set());
+    row.disciplines.forEach((d) => set.add(d));
+  }
+
+  return Object.fromEntries(
+    Object.entries(result).map(([id, set]) => [id, Array.from(set).sort()])
+  );
+}
