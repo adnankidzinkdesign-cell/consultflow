@@ -8,15 +8,18 @@ import type { Database } from "@/lib/supabase/types";
  *
  * SECURITY: this file must never be imported by anything that could end up
  * in a client bundle — the `server-only` import above makes any accidental
- * client-side import fail the build. Use this client ONLY for operations
- * that must legitimately bypass RLS:
- *   - generating short-lived signed URLs for private Storage objects
- *   - the auth `handle_new_user` trigger's equivalent server-side needs
+ * client-side import fail the build.
  *
- * Never use this client to "work around" an RLS policy on a path reachable
- * by a non-admin request — if a mutation needs elevated access, that's a
- * sign the RLS policy design needs revisiting, not a reason to reach for
- * this client.
+ * This used to be reserved for a short list of operations that must
+ * legitimately bypass RLS (signed URLs, the auth trigger's server-side
+ * equivalent) — everything else went through lib/supabase/server.ts's own
+ * RLS-scoped client instead. That client no longer works: consultflow's
+ * project can't resolve auth.uid() for a kidzink-auth-issued session (see
+ * lib/supabase/server.ts's comment, and kidzink-auth's README
+ * "Cross-project auth.uid() doesn't resolve"). lib/supabase/server.ts is
+ * now a thin alias for this client, which means most of the app reaches
+ * this file indirectly — every one of those call sites is now responsible
+ * for checking authorization itself in code, since Postgres no longer will.
  */
 export function createAdminClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;

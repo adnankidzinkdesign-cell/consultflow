@@ -6,13 +6,16 @@ import { Toaster } from "@/components/ui/sonner";
 
 /**
  * Server-side gate for everything under (app). Middleware already redirects
- * unauthenticated visitors to /login; this additionally handles the case of
- * a valid Microsoft session with no active ConsultFlow profile (e.g. an
- * account an admin has deactivated) by sending them to /unauthorized
- * instead of silently rendering nothing.
+ * unauthenticated visitors to kidzink-auth's /login; this additionally
+ * handles the case of a valid shared session with no active ConsultFlow
+ * profile, or without kidzink-auth app access to consultflow (see
+ * getSessionProfile.ts), by sending them to /unauthorized instead of
+ * silently rendering nothing.
  *
- * This check is a UX convenience — the real authorization boundary is the
- * Row Level Security policies applied to every query these pages make.
+ * This check (plus each server action's own checks) IS the real
+ * authorization boundary — not Row Level Security. consultflow's own
+ * project can't resolve auth.uid() for a kidzink-auth-issued session, so
+ * RLS no longer applies to anything queried through lib/supabase/server.ts.
  */
 export default async function AppLayout({
   children,

@@ -334,15 +334,13 @@ skip_nonce_check = false
 # If enabled, it will allow the user to successfully authenticate when the provider does not return an email address.
 email_optional = false
 
-# Microsoft 365 / Entra ID (Azure AD) sign-in — the only auth provider ConsultFlow uses.
-# Register a single-tenant app in Entra ID under the org's Microsoft 365 tenant, then set
-# SUPABASE_AUTH_EXTERNAL_AZURE_CLIENT_ID / SUPABASE_AUTH_EXTERNAL_AZURE_SECRET in your local
-# env (see .env.local.example). The `url` below (https://login.microsoftonline.com/<tenant-id>/v2.0)
-# scopes sign-in to your tenant only — this is the IdP-level half of the tenant restriction.
-# The app-level half is the email-domain check (ALLOWED_EMAIL_DOMAIN) in
-# app/(auth)/auth/callback/route.ts.
+# Microsoft 365 / Entra ID (Azure AD) sign-in now happens on kidzink-auth's
+# own Supabase project (D:\codebase\kidzink-auth), not this one — this
+# project no longer runs its own OAuth exchange, see lib/supabase/auth-server.ts
+# and lib/supabase/middleware.ts. Left disabled rather than removed as a
+# record of the config kidzink-auth's own config.toml now owns instead.
 [auth.external.azure]
-enabled = true
+enabled = false
 client_id = "env(SUPABASE_AUTH_EXTERNAL_AZURE_CLIENT_ID)"
 secret = "env(SUPABASE_AUTH_EXTERNAL_AZURE_SECRET)"
 url = "env(SUPABASE_AUTH_EXTERNAL_AZURE_URL)"

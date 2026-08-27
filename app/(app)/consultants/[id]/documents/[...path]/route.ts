@@ -18,7 +18,9 @@ export async function GET(
 ) {
   const profile = await getSessionProfile();
   if (!profile) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    const url = new URL("/login", process.env.NEXT_PUBLIC_KIDZINK_AUTH_URL!);
+    url.searchParams.set("next", request.url);
+    return NextResponse.redirect(url);
   }
 
   const { id: consultantId, path } = await params;

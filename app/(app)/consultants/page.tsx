@@ -28,7 +28,7 @@ export default async function ConsultantsPage() {
   ]);
 
   const [
-    { data: consultants },
+    { data: consultants, error: consultantsError },
     projectNamesByConsultant,
     ratingsByConsultant,
     blacklistedIds,
@@ -40,6 +40,13 @@ export default async function ConsultantsPage() {
     getBlacklistedConsultantIds(supabase),
     getBlacklistedDisciplinesByConsultant(supabase),
   ]);
+
+  // Was silently falling back to an empty list on any query error (e.g. RLS
+  // rejecting the request because consultflow's project doesn't yet trust
+  // kidzink-auth's JWT — see lib/supabase/server.ts's Third-Party Auth
+  // comment) — that read as "the list is just empty", not "something is
+  // broken". Throw instead so the real error surfaces.
+  if (consultantsError) throw consultantsError;
 
   const all = consultants ?? [];
 
