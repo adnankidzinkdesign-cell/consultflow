@@ -1,7 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { signOut } from "@/lib/actions/auth";
-import { Button, TopNavbar, TopNavbarSection } from "@kidzink/ui";
+import { Button, Logomark, TopNavbar, TopNavbarSection } from "@kidzink/ui";
 import { ThemeToggle } from "@/components/consultflow/theme-toggle";
 import { UserAvatar } from "@/components/consultflow/user-avatar";
 import type { SessionProfile } from "@/lib/auth/getSessionProfile";
@@ -20,14 +19,11 @@ export function AppHeader({ profile }: { profile: SessionProfile }) {
       <TopNavbar className="mx-auto h-16 max-w-6xl border-b-0 bg-transparent px-4 py-0 sm:px-6">
         <TopNavbarSection>
           <Link href="/consultants" className="flex items-center gap-3">
-            <Image
-              src="/brand/kidzink-logo.png"
-              alt="KidzInk"
-              width={120}
-              height={26}
-              className="h-6 w-auto"
-            />
-            <span className="text-sm font-semibold text-foreground">ConsultFlow</span>
+            {/* Kidzink_Digital-Transformations, node 499:6470 — every
+                navbar mock uses the library's Logomark (28px = "md") next
+                to a plain brand-text label, not a raster combined logo. */}
+            <Logomark size="md" />
+            <span className="text-sm font-semibold text-foreground">Kidzink ConsultFlow</span>
           </Link>
         </TopNavbarSection>
 
